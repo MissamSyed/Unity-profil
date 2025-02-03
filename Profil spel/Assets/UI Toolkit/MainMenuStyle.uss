@@ -1,0 +1,13 @@
+.header {
+    font-size: 30px;
+    color: rgb(255, 255, 255);
+}
+
+.button {
+    font-size: 10px;
+    width: 64px;
+    height: 32px;
+    align-items: stretch;
+    align-self: center;
+    justify-content: flex-start;
+}
