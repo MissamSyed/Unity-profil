@@ -10,4 +10,6 @@
     align-items: stretch;
     align-self: center;
     justify-content: flex-start;
+    padding-top: 10px;
+    margin-top: 10px;
 }
