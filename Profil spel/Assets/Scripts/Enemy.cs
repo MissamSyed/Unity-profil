@@ -4,27 +4,37 @@ using UnityEngine;
 
 public class Enenmy : MonoBehaviour
 {
-    GameObject player;
-    [SerializeField] float enemySpeed = 0f;
-    Rigidbody2D rb;
+    [SerializeField] private int health = 3; // Fienden har 3 HP
+    private bool isHit = false;
 
-    // Start is called before the first frame update
-    void Start()
+    void OnTriggerEnter2D(Collider2D collision)
     {
-        rb = GetComponent<Rigidbody2D>();
-        player = GameObject.FindWithTag("Player");
+        if (collision.CompareTag("Bullet") && !isHit) // Om fienden träffas av en kula
+        {
+            isHit = true;
+            TakeDamage(1);
+            Destroy(collision.gameObject); // Förstör kulan vid träff
+            StartCoroutine(ResetHit());
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    IEnumerator ResetHit()
     {
-        if (player != null)
+        yield return new WaitForSeconds(0.8f); // Förhindrar flera träffar samtidigt
+        isHit = false;
+    }
+
+    void TakeDamage(int damage)
+    {
+        health -= damage;
+        if (health <= 0)
         {
-            Vector2 direction = (player.transform.position - transform.position).normalized;
-            rb.MovePosition(rb.position + direction * enemySpeed * Time.fixedDeltaTime);
-
+            Die();
         }
+    }
 
-
+    void Die()
+    {
+        Destroy(gameObject); // Fienden förstörs
     }
 }
