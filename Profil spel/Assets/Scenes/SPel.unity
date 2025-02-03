@@ -227,6 +227,10 @@ PrefabInstance:
       value: Test player
       objectReference: {fileID: 0}
     - target: {fileID: 7331120978373927020, guid: c2931e1aac073eb4fb707b88d6ef4c52, type: 3}
+      propertyPath: fireRate
+      value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 7331120978373927020, guid: c2931e1aac073eb4fb707b88d6ef4c52, type: 3}
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
@@ -240,7 +244,7 @@ PrefabInstance:
       objectReference: {fileID: 2314673760395210066}
     - target: {fileID: 7331120978373927020, guid: c2931e1aac073eb4fb707b88d6ef4c52, type: 3}
       propertyPath: playerBulletSpeed
-      value: 4
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 8287997786831875693, guid: c2931e1aac073eb4fb707b88d6ef4c52, type: 3}
       propertyPath: m_LocalPosition.x
