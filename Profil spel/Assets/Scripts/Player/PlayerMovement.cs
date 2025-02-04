@@ -36,12 +36,20 @@ public class PlayerMovement : MonoBehaviour
         movement.x = Input.GetAxis("Horizontal");
         movement.y = Input.GetAxis("Vertical");
 
-        // Rotate player to face the mouse position
+        // Get the mouse position in world space (make sure Z is set to the same as the player’s Z in world space)
         Vector3 mousePos = mainCamera.ScreenToWorldPoint(Input.mousePosition);
+
+        // Ensure the Z position is set to the same as the player's Z (as it's a 2D game)
+        mousePos.z = transform.position.z;
+
+        // Calculate direction from player to mouse position
         Vector2 lookDir = (mousePos - transform.position).normalized;
 
+        // Calculate the angle to rotate to face the mouse
         float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle)); // Smooth rotation based on mouse position
+
+        // Apply the rotation to the player object
+        transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
     }
 
     void FixedUpdate()
@@ -84,7 +92,4 @@ public class PlayerMovement : MonoBehaviour
             rb.velocity = movement * moveSpeed;
         }
     }
-
 }
-
-

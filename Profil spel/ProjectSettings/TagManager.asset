@@ -10,10 +10,10 @@ TagManager:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - Hit Raycast
+  - Minimap
   - Water
   - UI
-  - 
+  - Hitraycast
   - 
   - 
   - 
