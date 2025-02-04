@@ -7,6 +7,7 @@ public class PlayerShooting : MonoBehaviour
     [SerializeField] float fireRate = 0.5f; // Cooldown duration between shots
     [SerializeField] float maxShootDistance = 10f; // Maximum range for the hit scan
     [SerializeField] LayerMask hitLayers; // Layers to check for hits (e.g., Enemy, Obstacles)
+    [SerializeField] GameObject gun; // Reference to the gun object
 
     private float nextFireTime = 0f;
 
@@ -30,8 +31,14 @@ public class PlayerShooting : MonoBehaviour
 
     void Fire()
     {
-        // Raycast from the player's gun position in the direction they are facing
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, transform.up, maxShootDistance, hitLayers);
+        if (gun == null) return; // Ensure the gun object is assigned
+
+        // Get the position and rotation of the gun
+        Vector2 gunPosition = gun.transform.position;
+        Vector2 gunDirection = gun.transform.up; // Direction the gun is facing
+
+        // Raycast from the gun's position in the direction it's facing
+        RaycastHit2D hit = Physics2D.Raycast(gunPosition, gunDirection, maxShootDistance, hitLayers);
 
         if (hit.collider != null)
         {
@@ -50,6 +57,6 @@ public class PlayerShooting : MonoBehaviour
         }
 
         // Visualize the ray in the editor (for debugging purposes)
-        Debug.DrawRay(transform.position, transform.up * maxShootDistance, Color.red, 0.1f);
+        Debug.DrawRay(gunPosition, gunDirection * maxShootDistance, Color.red, 0.1f);
     }
 }
