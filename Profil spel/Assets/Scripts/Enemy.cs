@@ -2,29 +2,42 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enenmy : MonoBehaviour
+public class Enemy : MonoBehaviour
 {
-    GameObject player;
-    [SerializeField] float enemySpeed = 0f;
-    Rigidbody2D rb;
+    [SerializeField] int health = 100;
+    
+    
+    private int currentHealth;
 
-    // Start is called before the first frame update
     void Start()
     {
-        rb = GetComponent<Rigidbody2D>();
-        player = GameObject.FindWithTag("Player");
+        currentHealth = health; // Set the health back to the original value
     }
 
-    // Update is called once per frame
-    void Update()
+    void OnTriggerEnter2D(Collider2D collision)
     {
-        if (player != null)
+        if (collision.CompareTag("Bullet"))
         {
-            Vector2 direction = (player.transform.position - transform.position).normalized;
-            rb.MovePosition(rb.position + direction * enemySpeed * Time.fixedDeltaTime);
-
+            TakeDamage(35);
+            Destroy(collision.gameObject); // Destroy bullet on impact
         }
+    }
 
+    void TakeDamage(int damage)
+    {
+        currentHealth -= damage;
+        Debug.Log("Player HP: " + currentHealth);
+
+        if (currentHealth <= 0)
+        {
+            Die();
+        }
+    }
+
+    void Die()
+    {
+        Debug.Log("Enemy has died!");
+        Destroy(gameObject); // Destroy player object
 
     }
 }

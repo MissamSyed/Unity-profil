@@ -3,11 +3,43 @@
     color: rgb(255, 255, 255);
 }
 
-.button {
+.Menubutton {
     font-size: 10px;
     width: 64px;
     height: 32px;
     align-items: stretch;
     align-self: center;
     justify-content: flex-start;
+    padding-top: 20px;
+    margin-top: 10px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    margin-left: 10px;
+}
+
+.Menubutton:hover {
+    font-size: 10px;
+    width: 64px;
+    height: 32px;
+    align-items: stretch;
+    align-self: center;
+    justify-content: flex-start;
+    padding-top: 10px;
+    margin-top: 10px;
+    scale: 1.1 1.1;
+    transition-duration: 0.3s;
+    transition-timing-function: ease-in-out-back;
+}
+
+.Menubutton:active {
+    font-size: 10px;
+    width: 64px;
+    height: 32px;
+    align-items: stretch;
+    align-self: center;
+    justify-content: flex-start;
+    padding-top: 10px;
+    margin-top: 10px;
+    transition-duration: 0.1s;
+    transition-timing-function: ease-out-sine;
 }
