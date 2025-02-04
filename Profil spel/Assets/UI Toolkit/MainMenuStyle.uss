@@ -10,11 +10,8 @@
     align-items: stretch;
     align-self: center;
     justify-content: flex-start;
-    padding-top: 20px;
-    margin-top: 10px;
-    margin-right: 10px;
-    margin-bottom: 10px;
-    margin-left: 10px;
+    padding-top: 10px;
+    margin-top: 20px;
 }
 
 .Menubutton:hover {
@@ -41,5 +38,5 @@
     padding-top: 10px;
     margin-top: 10px;
     transition-duration: 0.1s;
-    transition-timing-function: ease-out-sine;
+    transition-timing-function: ease-out;
 }
