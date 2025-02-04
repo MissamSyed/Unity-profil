@@ -4,25 +4,29 @@ using UnityEngine;
 
 public class PlayerHealth : MonoBehaviour
 {
-    public int maxHealth = 100;
-    private int currentHealth;
+    public int currentHealth = 100;  // Starting health of the player
+    public int maxHealth = 100;      // Maximum health of the player
 
-    void Start()
+    // Method to take damage
+    public void TakeDamage(int damageAmount)
     {
-        currentHealth = maxHealth;
-    }
+        currentHealth -= damageAmount; // Reduce health by the damage amount
 
-    public void TakeDamage(int damage)
-    {
-        currentHealth -= damage;
+        // Check if health reaches 0 or below
         if (currentHealth <= 0)
         {
-            Die();
+            currentHealth = 0;
+            Die(); // Call the Die method if health reaches 0
         }
+
+        Debug.Log("Player's current health: " + currentHealth);
     }
 
-    void Die()
+    // Method to handle the player's death
+    private void Die()
     {
-        Debug.Log("Player died!");
+        Debug.Log("Player has died.");
+        // You can add your death logic here (e.g., disable the player, restart the scene, etc.)
+        Destroy(gameObject); // Example: Destroy the player GameObject
     }
 }
