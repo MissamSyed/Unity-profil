@@ -2,32 +2,33 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enenmy : MonoBehaviour
+public class Enemy : MonoBehaviour
 {
-    [SerializeField] private int health = 3; // Fienden har 3 HP
-    private bool isHit = false;
+    [SerializeField] int health = 100;
+    
+    
+    private int currentHealth;
+
+    void Start()
+    {
+        currentHealth = health; // Set the health back to the original value
+    }
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Bullet") && !isHit) // Om fienden träffas av en kula
+        if (collision.CompareTag("Bullet"))
         {
-            isHit = true;
-            TakeDamage(1);
-            Destroy(collision.gameObject); // Förstör kulan vid träff
-            StartCoroutine(ResetHit());
+            TakeDamage(35);
+            Destroy(collision.gameObject); // Destroy bullet on impact
         }
-    }
-
-    IEnumerator ResetHit()
-    {
-        yield return new WaitForSeconds(0.8f); // Förhindrar flera träffar samtidigt
-        isHit = false;
     }
 
     void TakeDamage(int damage)
     {
-        health -= damage;
-        if (health <= 0)
+        currentHealth -= damage;
+        Debug.Log("Player HP: " + currentHealth);
+
+        if (currentHealth <= 0)
         {
             Die();
         }
@@ -35,6 +36,8 @@ public class Enenmy : MonoBehaviour
 
     void Die()
     {
-        Destroy(gameObject); // Fienden förstörs
+        Debug.Log("Enemy has died!");
+        Destroy(gameObject); // Destroy player object
+
     }
 }

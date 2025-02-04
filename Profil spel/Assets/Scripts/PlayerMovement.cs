@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
-    public float moveSpeed = 5f;
+    [SerializeField] float moveSpeed = 5f;
     public Camera mainCamera;
 
     private Rigidbody2D rb;
@@ -14,14 +14,17 @@ public class PlayerMovement : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        rb.interpolation = RigidbodyInterpolation2D.Interpolate; // Optional for smoothing
     }
 
     void Update()
     {
-        
-        movement.x = Input.GetAxisRaw("Horizontal");
-        movement.y = Input.GetAxisRaw("Vertical");
+        // Get input for movement
+        movement.x = Input.GetAxis("Horizontal");
+        movement.y = Input.GetAxis("Vertical");
 
+       
+        // Rotate player to face the mouse position
         Vector3 mousePos = mainCamera.ScreenToWorldPoint(Input.mousePosition);
         Vector2 lookDir = (mousePos - transform.position).normalized;
 
@@ -31,6 +34,7 @@ public class PlayerMovement : MonoBehaviour
 
     void FixedUpdate()
     {
-        rb.velocity = movement.normalized * moveSpeed;
+        // Apply movement in FixedUpdate for smooth physics updates
+        rb.velocity = movement * moveSpeed;
     }
 }
