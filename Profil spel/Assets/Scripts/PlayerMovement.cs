@@ -41,7 +41,7 @@ public class PlayerMovement : MonoBehaviour
         Vector2 lookDir = (mousePos - transform.position).normalized;
 
         float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
+        transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle)); // Smooth rotation based on mouse position
     }
 
     void FixedUpdate()
@@ -54,7 +54,8 @@ public class PlayerMovement : MonoBehaviour
             // If the player is farther than the stopping distance from the enemy, apply movement
             if (distanceToEnemy > stoppingDistance)
             {
-                rb.velocity = movement * moveSpeed; // Apply normal movement
+                // Apply normal movement
+                rb.velocity = movement * moveSpeed;
             }
             else
             {
@@ -77,5 +78,13 @@ public class PlayerMovement : MonoBehaviour
                 rb.velocity = movement * moveSpeed;
             }
         }
+        else
+        {
+            // If no enemy exists, apply normal movement without checking for the enemy
+            rb.velocity = movement * moveSpeed;
+        }
     }
+
 }
+
+
