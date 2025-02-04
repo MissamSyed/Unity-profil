@@ -7,13 +7,13 @@ public class PlayerShooting : MonoBehaviour
     [SerializeField] float playerBulletSpeed = 10f;
     [SerializeField] GameObject playerBullet;
     [SerializeField] GameObject playerGun;
-    [SerializeField] float fireRate = 0.5f; // Cooldown duration
+    [SerializeField] float fireRate = 0.1f; 
     private float nextFireTime = 0f;
 
-    // Update is called once per frame
+    
     void Update()
     {
-        if (Input.GetButtonDown("Fire1")) //Fire 1 is mapped to shooting
+        if (Input.GetButtonDown("Fire1")) 
         {
             TryFire();
         }

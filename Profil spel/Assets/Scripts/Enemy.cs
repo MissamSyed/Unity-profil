@@ -11,7 +11,7 @@ public class Enemy : MonoBehaviour
 
     void Start()
     {
-        currentHealth = health; // Set the health back to the original value
+        currentHealth = health; 
     }
 
     void OnTriggerEnter2D(Collider2D collision)
@@ -19,7 +19,7 @@ public class Enemy : MonoBehaviour
         if (collision.CompareTag("Bullet"))
         {
             TakeDamage(35);
-            Destroy(collision.gameObject); // Destroy bullet on impact
+            Destroy(collision.gameObject); 
         }
     }
 
@@ -37,7 +37,7 @@ public class Enemy : MonoBehaviour
     void Die()
     {
         Debug.Log("Enemy has died!");
-        Destroy(gameObject); // Destroy player object
+        Destroy(gameObject); 
 
     }
 }
