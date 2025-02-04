@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class EnemyFollow : MonoBehaviour
 {
+    [SerializeField] float followSpeed = 5f;
+    GameObject player;
+    
+
     // Start is called before the first frame update
     void Start()
     {
