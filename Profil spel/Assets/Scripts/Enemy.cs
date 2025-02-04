@@ -1,43 +1,26 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    [SerializeField] int health = 100;
-    
-    
-    private int currentHealth;
+    public int health = 100; // Example health value
 
-    void Start()
+    // Method to deal damage to the enemy
+    public void TakeDamage(int damageAmount)
     {
-        currentHealth = health; 
-    }
+        health -= damageAmount;
+        Debug.Log("Enemy took damage. Health left: " + health);
 
-    void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.CompareTag("Bullet"))
-        {
-            TakeDamage(35);
-            Destroy(collision.gameObject); 
-        }
-    }
-
-    void TakeDamage(int damage)
-    {
-        currentHealth -= damage;
-        Debug.Log("Player HP: " + currentHealth);
-
-        if (currentHealth <= 0)
+        // Check if the enemy has died
+        if (health <= 0)
         {
             Die();
         }
     }
 
+    // Method for enemy death
     void Die()
     {
-        Debug.Log("Enemy has died!");
-        Destroy(gameObject); 
-
+        Debug.Log("Enemy died!");
+        Destroy(gameObject); // Destroy the enemy object
     }
 }
