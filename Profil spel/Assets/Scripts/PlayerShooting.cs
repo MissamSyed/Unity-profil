@@ -13,7 +13,7 @@ public class PlayerShooting : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetButtonDown("Fire1")) // Assuming "Fire1" is mapped to shooting
+        if (Input.GetButtonDown("Fire1")) //Fire 1 is mapped to shooting
         {
             TryFire();
         }
