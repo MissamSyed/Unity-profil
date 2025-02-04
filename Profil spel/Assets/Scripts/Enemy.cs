@@ -2,25 +2,28 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    public int health = 100; // Example health value
+    public int health = 100;
+    public delegate void DeathEvent(); // Event to handle death
+    public event DeathEvent onDeath;   // Declare the event
 
-    // Method to deal damage to the enemy
+    // Take damage method
     public void TakeDamage(int damageAmount)
     {
         health -= damageAmount;
         Debug.Log("Enemy took damage. Health left: " + health);
 
-        // Check if the enemy has died
+        // If health drops below or equals 0, call Die method
         if (health <= 0)
         {
             Die();
         }
     }
 
-    // Method for enemy death
+    // Handle death logic
     void Die()
     {
         Debug.Log("Enemy died!");
-        Destroy(gameObject); // Destroy the enemy object
+        onDeath?.Invoke(); // Trigger the death event
+        Destroy(gameObject);  // Destroy the current enemy object
     }
 }
