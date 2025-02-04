@@ -13,7 +13,7 @@ public class PlayerShooting : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetButtonDown("Fire1")) // Fire1 is mapped to shooting (e.g., Left Mouse Button)
+        if (Input.GetButtonDown("Fire1")) // Fire1 is mapped to shooting
         {
             TryFire();
         }
@@ -44,7 +44,7 @@ public class PlayerShooting : MonoBehaviour
                 Enemy enemy = hit.collider.GetComponent<Enemy>();
                 if (enemy != null)
                 {
-                    enemy.TakeDamage(10); // Example damage value
+                    enemy.TakeDamage(35); // Example damage value
                 }
             }
         }

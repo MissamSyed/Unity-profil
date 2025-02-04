@@ -176,7 +176,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2452280873561460359, guid: deeb8890214d811459229e00e5c93a18, type: 3}
       propertyPath: moveSpeed
-      value: 4
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 2452280873561460359, guid: deeb8890214d811459229e00e5c93a18, type: 3}
       propertyPath: mainCamera
@@ -229,11 +229,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7877893460074655327, guid: 99dd2e80dc880234da4523ad3f9479e7, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 3.57
+      value: 3.5
       objectReference: {fileID: 0}
     - target: {fileID: 7877893460074655327, guid: 99dd2e80dc880234da4523ad3f9479e7, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.39
+      value: 0.48
       objectReference: {fileID: 0}
     - target: {fileID: 7877893460074655327, guid: 99dd2e80dc880234da4523ad3f9479e7, type: 3}
       propertyPath: m_LocalPosition.z

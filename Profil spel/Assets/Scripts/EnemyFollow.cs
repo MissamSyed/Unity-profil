@@ -13,7 +13,7 @@ public class EnemyFollow : MonoBehaviour
 
     void Update()
     {
-        if (player == null) return;
+        if (player == null) return; // If no player reference, stop enemy movement
 
         float distance = Vector2.Distance(transform.position, player.position);
         Vector2 direction = (player.position - transform.position).normalized;
@@ -33,5 +33,10 @@ public class EnemyFollow : MonoBehaviour
             float angleToTurn = Mathf.MoveTowardsAngle(transform.eulerAngles.z, targetAngle, rotationSpeed * Time.deltaTime); // Smoothly rotate the enemy towards the target angle
             transform.rotation = Quaternion.Euler(0f, 0f, angleToTurn); // Apply the rotation in 2D
         }
+        else
+        {
+            // You can add logic for what happens if the enemy is not detecting the player
+        }
     }
+
 }

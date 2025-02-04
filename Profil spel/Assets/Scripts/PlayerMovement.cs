@@ -78,5 +78,13 @@ public class PlayerMovement : MonoBehaviour
                 rb.velocity = movement * moveSpeed;
             }
         }
+        else
+        {
+            // If no enemy exists, apply normal movement without checking for the enemy
+            rb.velocity = movement * moveSpeed;
+        }
     }
+
 }
+
+
