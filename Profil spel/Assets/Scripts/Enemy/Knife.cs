@@ -4,19 +4,19 @@ using UnityEngine;
 
 public class Knife : MonoBehaviour
 {
-    public int damageAmount = 10; // Amount of damage to deal when touching the player
+    public int damageAmount = 10; //Amount of damage to deal to the player
 
-    // Trigger when another collider enters this collider
+    
     private void OnTriggerEnter2D(Collider2D other)
     {
-        // Check if the player collided with the knife
+        //Check if the player collided with the knife
         if (other.CompareTag("Player"))
         {
-            // Call the TakeDamage method on the PlayerHealth script
+            //Call the TakeDamage method on the PlayerHealth script
             PlayerHealth playerHealth = other.GetComponent<PlayerHealth>();
             if (playerHealth != null)
             {
-                playerHealth.TakeDamage(damageAmount); // Apply damage to the player
+                playerHealth.TakeDamage(damageAmount); //Apply damage to the player
                 Debug.Log("Player hit by knife! Damage: " + damageAmount);
             }
         }
