@@ -4,18 +4,19 @@ using UnityEngine;
 
 public class PlayerShooting : MonoBehaviour
 {
-    [SerializeField] float fireRate = 0.5f; // Cooldown between shots
+    [SerializeField] float fireRate = 0.2f; // Fire rate for automatic mode
     [SerializeField] float maxShootDistance = 10f; // Max shooting range
     [SerializeField] LayerMask hitLayers; // Layers to check for hits
     [SerializeField] GameObject gun; // Reference to the gun object
 
-    [SerializeField] int magazineSize = 2; // Bullets per magazine
+    [SerializeField] int magazineSize = 10; // Bullets per magazine
     [SerializeField] int totalAmmo = 30; // Total bullets available (reserves)
-    [SerializeField] float reloadTime = 4f; // Time taken to reload
+    [SerializeField] float reloadTime = 1.5f; // Time taken to reload
 
     private int currentAmmo;
     private float nextFireTime = 0f;
     private bool isReloading = false;
+    private bool isAutomatic = false; // Fire mode: false = single, true = auto
 
     void Start()
     {
@@ -24,14 +25,30 @@ public class PlayerShooting : MonoBehaviour
 
     void Update()
     {
-        if (isReloading) return; // Prevent firing while reloading
+        if (isReloading) return; // Prevent shooting while reloading
 
-        if (Input.GetButtonDown("Fire1"))
+        // Fire Mode Selection
+        if (Input.GetKeyDown(KeyCode.V))
+        {
+            isAutomatic = !isAutomatic;
+            Debug.Log(isAutomatic ? "Fire Mode: Automatic" : "Fire Mode: Semi-Auto");
+        }
+
+        // Semi-Auto (One shot per click)
+        if (!isAutomatic && Input.GetButtonDown("Fire1"))
         {
             TryFire();
         }
 
-        if (Input.GetKeyDown(KeyCode.R)) // Press 'R' to reload
+        // Automatic (Hold for continuous fire)
+        if (isAutomatic && Input.GetButton("Fire1"))
+        {
+            TryFire();
+            fireRate = 0.2f;
+        }
+
+        // Reloading
+        if (Input.GetKeyDown(KeyCode.R))
         {
             StartCoroutine(Reload());
         }
@@ -55,7 +72,7 @@ public class PlayerShooting : MonoBehaviour
         currentAmmo--; // Reduce ammo
 
         Vector2 gunPosition = gun.transform.position;
-        Vector2 gunDirection = gun.transform.up; // Direction the gun is facing
+        Vector2 gunDirection = gun.transform.up;
         Vector2 endPoint = gunPosition + (gunDirection * maxShootDistance);
 
         RaycastHit2D hit = Physics2D.Raycast(gunPosition, gunDirection, maxShootDistance, hitLayers);
@@ -63,7 +80,7 @@ public class PlayerShooting : MonoBehaviour
         if (hit.collider != null)
         {
             Debug.Log("Hit: " + hit.collider.name);
-            endPoint = hit.point; // Stop the ray at the hit point
+            endPoint = hit.point;
 
             if (hit.collider.CompareTag("Enemy"))
             {
@@ -75,7 +92,14 @@ public class PlayerShooting : MonoBehaviour
             }
         }
 
-     
+        StartCoroutine(ShowDebugRay(gunPosition, endPoint));
+    }
+
+    IEnumerator ShowDebugRay(Vector2 start, Vector2 end)
+    {
+        float duration = 0.1f;
+        Debug.DrawLine(start, end, Color.red, duration);
+        yield return new WaitForSeconds(duration);
     }
 
     IEnumerator Reload()
@@ -85,7 +109,7 @@ public class PlayerShooting : MonoBehaviour
             isReloading = true;
             Debug.Log("Reloading...");
 
-            yield return new WaitForSeconds(reloadTime); // Wait for reload time
+            yield return new WaitForSeconds(reloadTime);
 
             int ammoNeeded = magazineSize - currentAmmo;
             int ammoToReload = Mathf.Min(ammoNeeded, totalAmmo);
@@ -95,6 +119,10 @@ public class PlayerShooting : MonoBehaviour
 
             isReloading = false;
             Debug.Log("Reloaded! Ammo: " + currentAmmo + "/" + totalAmmo);
+        }
+        else
+        {
+            Debug.Log("No more ammo left!");
         }
     }
 }

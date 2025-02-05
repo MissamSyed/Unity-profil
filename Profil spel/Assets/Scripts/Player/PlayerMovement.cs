@@ -76,13 +76,13 @@ public class PlayerMovement : MonoBehaviour
                 // Allow movement only in the perpendicular direction (not toward the enemy)
                 float dotProduct = Vector2.Dot(movement, directionToEnemy);
 
-                if (dotProduct > 0) // If the player is moving towards the enemy
+                if (dotProduct > 0) 
                 {
-                    // Stop movement in the direction of the enemy but allow movement in the perpendicular direction
+                    // Stop movement in the direction of the enemy but allow movement in different direction
                     movement = perpendicularDirection * movement.magnitude;
                 }
 
-                // Apply the movement
+                
                 rb.velocity = movement * moveSpeed;
             }
         }
