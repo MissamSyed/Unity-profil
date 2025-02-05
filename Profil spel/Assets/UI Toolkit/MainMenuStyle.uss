@@ -30,8 +30,9 @@
     padding-top: 10px;
     margin-top: 10px;
     scale: 1.1 1.1;
-    transition-duration: 0.3s;
+    transition-duration: 0.2s;
     transition-timing-function: ease-in-out-back;
+    transition-delay: 0.1s;
 }
 
 .Menubutton:active {
@@ -45,4 +46,10 @@
     margin-top: 10px;
     transition-duration: 0.1s;
     transition-timing-function: ease-out;
+}
+
+.hover-text {
+}
+
+.HoverText.uss {
 }
