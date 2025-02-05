@@ -226,13 +226,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 662037392962512542, guid: 99dd2e80dc880234da4523ad3f9479e7, type: 3}
+      propertyPath: health
+      value: 400
+      objectReference: {fileID: 0}
     - target: {fileID: 4070372955072770513, guid: 99dd2e80dc880234da4523ad3f9479e7, type: 3}
       propertyPath: player
       value: 
       objectReference: {fileID: 138408940}
     - target: {fileID: 4070372955072770513, guid: 99dd2e80dc880234da4523ad3f9479e7, type: 3}
       propertyPath: moveSpeed
-      value: 4
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4070372955072770513, guid: 99dd2e80dc880234da4523ad3f9479e7, type: 3}
       propertyPath: rotationSpeed
@@ -793,6 +797,10 @@ PrefabInstance:
       propertyPath: mainCamera
       value: 
       objectReference: {fileID: 1998570144}
+    - target: {fileID: 8728676426830167892, guid: 83d5a367ba0e5a24fa0badb0c9b140b3, type: 3}
+      propertyPath: magazineSize
+      value: 5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

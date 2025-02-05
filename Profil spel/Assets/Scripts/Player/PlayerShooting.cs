@@ -4,59 +4,97 @@ using UnityEngine;
 
 public class PlayerShooting : MonoBehaviour
 {
-    [SerializeField] float fireRate = 0.5f; // Cooldown duration between shots
-    [SerializeField] float maxShootDistance = 10f; // Maximum range for the hit scan
-    [SerializeField] LayerMask hitLayers; // Layers to check for hits (e.g., Enemy, Obstacles)
+    [SerializeField] float fireRate = 0.5f; // Cooldown between shots
+    [SerializeField] float maxShootDistance = 10f; // Max shooting range
+    [SerializeField] LayerMask hitLayers; // Layers to check for hits
     [SerializeField] GameObject gun; // Reference to the gun object
 
-    private float nextFireTime = 0f;
+    [SerializeField] int magazineSize = 2; // Bullets per magazine
+    [SerializeField] int totalAmmo = 30; // Total bullets available (reserves)
+    [SerializeField] float reloadTime = 4f; // Time taken to reload
 
-    // Update is called once per frame
+    private int currentAmmo;
+    private float nextFireTime = 0f;
+    private bool isReloading = false;
+
+    void Start()
+    {
+        currentAmmo = magazineSize; // Start with a full magazine
+    }
+
     void Update()
     {
-        if (Input.GetButtonDown("Fire1")) // Fire1 is mapped to shooting
+        if (isReloading) return; // Prevent firing while reloading
+
+        if (Input.GetButtonDown("Fire1"))
         {
             TryFire();
+        }
+
+        if (Input.GetKeyDown(KeyCode.R)) // Press 'R' to reload
+        {
+            StartCoroutine(Reload());
         }
     }
 
     void TryFire()
     {
-        if (Time.time >= nextFireTime)
+        if (Time.time >= nextFireTime && currentAmmo > 0)
         {
             Fire();
             nextFireTime = Time.time + fireRate;
+        }
+        else if (currentAmmo <= 0)
+        {
+            Debug.Log("Out of ammo! Reload needed.");
         }
     }
 
     void Fire()
     {
-        if (gun == null) return; // Ensure the gun object is assigned
+        currentAmmo--; // Reduce ammo
 
-        // Get the position and rotation of the gun
         Vector2 gunPosition = gun.transform.position;
         Vector2 gunDirection = gun.transform.up; // Direction the gun is facing
+        Vector2 endPoint = gunPosition + (gunDirection * maxShootDistance);
 
-        // Raycast from the gun's position in the direction it's facing
         RaycastHit2D hit = Physics2D.Raycast(gunPosition, gunDirection, maxShootDistance, hitLayers);
 
         if (hit.collider != null)
         {
-            // If the ray hits something, handle it (e.g., deal damage to enemy)
             Debug.Log("Hit: " + hit.collider.name);
+            endPoint = hit.point; // Stop the ray at the hit point
 
-            // Example: If the hit object has an Enemy script, deal damage
             if (hit.collider.CompareTag("Enemy"))
             {
                 Enemy enemy = hit.collider.GetComponent<Enemy>();
                 if (enemy != null)
                 {
-                    enemy.TakeDamage(35); // Example damage value
+                    enemy.TakeDamage(35);
                 }
             }
         }
 
-        // Visualize the ray in the editor (for debugging purposes)
-        Debug.DrawRay(gunPosition, gunDirection * maxShootDistance, Color.red, 0.1f);
+     
+    }
+
+    IEnumerator Reload()
+    {
+        if (totalAmmo > 0 && currentAmmo < magazineSize)
+        {
+            isReloading = true;
+            Debug.Log("Reloading...");
+
+            yield return new WaitForSeconds(reloadTime); // Wait for reload time
+
+            int ammoNeeded = magazineSize - currentAmmo;
+            int ammoToReload = Mathf.Min(ammoNeeded, totalAmmo);
+
+            currentAmmo += ammoToReload;
+            totalAmmo -= ammoToReload;
+
+            isReloading = false;
+            Debug.Log("Reloaded! Ammo: " + currentAmmo + "/" + totalAmmo);
+        }
     }
 }
