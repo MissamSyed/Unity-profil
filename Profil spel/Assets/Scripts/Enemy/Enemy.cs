@@ -6,7 +6,7 @@ public class Enemy : MonoBehaviour
 {
     public int enemyHealth = 100;
     public delegate void DeathEvent(); 
-    public event DeathEvent onDeath;   //Declare the event
+    public event DeathEvent onDeath; //Declare the event
 
     //Damage mechanic
     public void TakeDamage(int damageAmount)
@@ -26,6 +26,6 @@ public class Enemy : MonoBehaviour
     {
         Debug.Log("Enemy died!");
         onDeath?.Invoke(); 
-        Destroy(gameObject);  // Destroy the current enemy object
+        Destroy(gameObject); // Destroy the current enemy object
     }
 }
