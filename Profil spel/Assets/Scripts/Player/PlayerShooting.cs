@@ -47,7 +47,7 @@ public class PlayerShooting : MonoBehaviour
             fireRate = 0.1f;
         }
 
-        //Reloading
+        //Reloading mechanic
         if (Input.GetKeyDown(KeyCode.R))
         {
             StartCoroutine(Reload());
@@ -99,7 +99,6 @@ public class PlayerShooting : MonoBehaviour
 
         StartCoroutine(ShowDebugRay(gunPosition, endPoint));
     }
-
 
     //Debug Hit and scan system
     IEnumerator ShowDebugRay(Vector2 start, Vector2 end)
