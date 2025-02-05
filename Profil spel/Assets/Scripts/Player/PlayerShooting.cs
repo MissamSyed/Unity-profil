@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class PlayerShooting : MonoBehaviour
 {
-    [SerializeField] float fireRate = 0.2f; // Fire rate for automatic mode
-    [SerializeField] float maxShootDistance = 10f; // Max shooting range
+    [SerializeField] float fireRate = 0.1f; //Fire rate for automatic mode
+    [SerializeField] float maxShootDistance = 10f; //Max shooting range
     [SerializeField] LayerMask hitLayers; // Layers to check for hits
     [SerializeField] GameObject gun; // Reference to the gun object
 
@@ -27,27 +27,27 @@ public class PlayerShooting : MonoBehaviour
     {
         if (isReloading) return; // Prevent shooting while reloading
 
-        // Fire Mode Selection
+        //Mode selection with "V"
         if (Input.GetKeyDown(KeyCode.V))
         {
             isAutomatic = !isAutomatic;
             Debug.Log(isAutomatic ? "Fire Mode: Automatic" : "Fire Mode: Semi-Auto");
         }
 
-        // Semi-Auto (One shot per click)
+        //Semi-Auto (One shot per click)
         if (!isAutomatic && Input.GetButtonDown("Fire1"))
         {
             TryFire();
         }
 
-        // Automatic (Hold for continuous fire)
+        //Automatic (Hold for continuous fire)
         if (isAutomatic && Input.GetButton("Fire1"))
         {
             TryFire();
-            fireRate = 0.2f;
+            fireRate = 0.1f;
         }
 
-        // Reloading
+        //Reloading
         if (Input.GetKeyDown(KeyCode.R))
         {
             StartCoroutine(Reload());
@@ -67,15 +67,19 @@ public class PlayerShooting : MonoBehaviour
         }
     }
 
+    //Hit and scan firing and ammo mechanic
     void Fire()
     {
-        currentAmmo--; // Reduce ammo
+        currentAmmo--; //Reduce ammo
 
         Vector2 gunPosition = gun.transform.position;
         Vector2 gunDirection = gun.transform.up;
         Vector2 endPoint = gunPosition + (gunDirection * maxShootDistance);
 
-        RaycastHit2D hit = Physics2D.Raycast(gunPosition, gunDirection, maxShootDistance, hitLayers);
+        //Ignore the knife because of the Ignore Raycast tag
+        int layerMask = hitLayers & ~LayerMask.GetMask("Ignore Raycast");
+
+        RaycastHit2D hit = Physics2D.Raycast(gunPosition, gunDirection, maxShootDistance, layerMask);
 
         if (hit.collider != null)
         {
@@ -88,6 +92,7 @@ public class PlayerShooting : MonoBehaviour
                 if (enemy != null)
                 {
                     enemy.TakeDamage(35);
+                    
                 }
             }
         }
@@ -95,6 +100,8 @@ public class PlayerShooting : MonoBehaviour
         StartCoroutine(ShowDebugRay(gunPosition, endPoint));
     }
 
+
+    //Debug Hit and scan system
     IEnumerator ShowDebugRay(Vector2 start, Vector2 end)
     {
         float duration = 0.1f;
@@ -102,6 +109,7 @@ public class PlayerShooting : MonoBehaviour
         yield return new WaitForSeconds(duration);
     }
 
+    //Reload mechanic
     IEnumerator Reload()
     {
         if (totalAmmo > 0 && currentAmmo < magazineSize)
