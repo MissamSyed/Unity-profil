@@ -9,8 +9,8 @@ public class PlayerShooting : MonoBehaviour
     [SerializeField] LayerMask hitLayers; //Layers to check for hits so only this takes damage
     [SerializeField] GameObject gun; //Reference to the gun object
 
-    [SerializeField] int magazineSize = 10; // Bullets per magazine 
-    [SerializeField] int totalAmmo = 30; //Total bullets available in whole (reserves)
+    [SerializeField] int magazineSize = 10; //Bullets in the magazine 
+    [SerializeField] int totalAmmo = 30; //Total bullets available in whole (reserves) (about 3 magazines)
     [SerializeField] float reloadTime = 1.5f; //Time to reload
 
     private int currentAmmo;
@@ -132,4 +132,19 @@ public class PlayerShooting : MonoBehaviour
             Debug.Log("No more ammo left!");
         }
     }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("AmmoBox"))
+        {
+            int ammoNeeded = 30 - totalAmmo; //How much ammo can be refilled
+            int refillAmount = Mathf.Max(0, ammoNeeded); //Checks so it doesnt go above 30
+
+            totalAmmo += refillAmount; 
+            Destroy(other.gameObject); //Destroy the ammo box after touching the player
+
+            Debug.Log("Picked up AmmoBox! Total Ammo: " + totalAmmo);
+        }
+    }
+
 }
