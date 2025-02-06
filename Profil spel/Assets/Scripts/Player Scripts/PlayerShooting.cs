@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class PlayerShooting : MonoBehaviour
 {
+    [SerializeField] private Animator animator;  //Reference to the Animator
+    [SerializeField] private string shootAnimationTrigger = "Shoot"; //The trigger for the shooting animation
+
     [SerializeField] float fireRate = 0.1f; //Fire rate for automatic mode
     [SerializeField] float maxShootDistance = 10f; //Max shooting range
     [SerializeField] LayerMask hitLayers; //Layers to check for hits so only this takes damage
@@ -70,13 +73,17 @@ public class PlayerShooting : MonoBehaviour
     //Hit and scan firing and ammo mechanic
     void Fire()
     {
-        currentAmmo--; //Reduce ammo
+        currentAmmo--; // Reduce ammo
 
+        // Trigger shooting animation and set IsShooting to true
+        animator.SetTrigger(shootAnimationTrigger); // Trigger shoot animation
+        animator.SetBool("IsShooting", true); // Set IsShooting to true to transition to shooting state
+
+        // Logic for raycasting
         Vector2 gunPosition = gun.transform.position;
         Vector2 gunDirection = gun.transform.up;
         Vector2 endPoint = gunPosition + (gunDirection * maxShootDistance);
 
-        //Ignore the knife because of the Ignore Raycast tag
         int layerMask = hitLayers & ~LayerMask.GetMask("Ignore Raycast");
 
         RaycastHit2D hit = Physics2D.Raycast(gunPosition, gunDirection, maxShootDistance, layerMask);
@@ -91,14 +98,25 @@ public class PlayerShooting : MonoBehaviour
                 Enemy enemy = hit.collider.GetComponent<Enemy>();
                 if (enemy != null)
                 {
-                    enemy.TakeDamage(35);
-                    
+                    enemy.TakeDamage(35);  // Damage to enemy
                 }
             }
         }
 
         StartCoroutine(ShowDebugRay(gunPosition, endPoint));
+
+        // Make sure IsShooting is set back to false when shooting finishes
+        StartCoroutine(StopShootingAnimation());  // Add a delay to set IsShooting back to false
     }
+
+    // Stop shooting after the animation is done (you can adjust time if necessary)
+    IEnumerator StopShootingAnimation()
+    {
+        // Wait for the animation to finish (this time should match your animation duration)
+        yield return new WaitForSeconds(0.25f); // Adjust this to match the length of your shooting animation
+        animator.SetBool("IsShooting", false); // Set IsShooting to false
+    }
+
 
     //Debug Hit and scan system
     IEnumerator ShowDebugRay(Vector2 start, Vector2 end)
