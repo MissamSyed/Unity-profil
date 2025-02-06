@@ -21,7 +21,7 @@ public class MenuTest : MonoBehaviour
         Button settingsButton = root.Q<Button>("Settings_button");
         Button mainButton = root.Q<Button>("Exit");
 
-        settings = root.Q<VisualElement>("SettingsPanel");
+        settings = root.Q<VisualElement>("settingbackground");
         main = root.Q<VisualElement>("Exit");
 
         mainButton.RegisterCallback<ClickEvent>(x => settings.style.display = DisplayStyle.None);
