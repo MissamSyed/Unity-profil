@@ -9,15 +9,9 @@ public class PlayerShooting : MonoBehaviour
     [SerializeField] LayerMask hitLayers; //Layers to check for hits so only this takes damage
     [SerializeField] GameObject gun; //Reference to the gun object
 
-<<<<<<< HEAD
-    [SerializeField] int magazineSize = 10; // Bullets per magazine
-    [SerializeField] int totalAmmo = 40; // Total bullets available (reserves)
-    [SerializeField] float reloadTime = 1.5f; // Time taken to reload
-=======
-    [SerializeField] int magazineSize = 10; // Bullets per magazine 
-    [SerializeField] int totalAmmo = 30; //Total bullets available in whole (reserves)
+    [SerializeField] int magazineSize = 10; //Bullets in the magazine 
+    [SerializeField] int totalAmmo = 30; //Total bullets available in whole (reserves) (about 3 magazines)
     [SerializeField] float reloadTime = 1.5f; //Time to reload
->>>>>>> 00166215f320011934e8676badcbc00589daf7a6
 
     private int currentAmmo;
     private float nextFireTime = 0f;
@@ -40,19 +34,13 @@ public class PlayerShooting : MonoBehaviour
             Debug.Log(isAutomatic ? "Fire Mode: Automatic" : "Fire Mode: Semi-Auto");
         }
 
-<<<<<<< HEAD
-=======
         //Semi-Auto (One shot per click)
->>>>>>> 00166215f320011934e8676badcbc00589daf7a6
         if (!isAutomatic && Input.GetButtonDown("Fire1"))
         {
             TryFire();
         }
-<<<<<<< HEAD
-=======
 
         //Automatic (Hold for continuous fire)
->>>>>>> 00166215f320011934e8676badcbc00589daf7a6
         if (isAutomatic && Input.GetButton("Fire1"))
         {
             TryFire();
@@ -144,4 +132,19 @@ public class PlayerShooting : MonoBehaviour
             Debug.Log("No more ammo left!");
         }
     }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("AmmoBox"))
+        {
+            int ammoNeeded = 30 - totalAmmo; //How much ammo can be refilled
+            int refillAmount = Mathf.Max(0, ammoNeeded); //Checks so it doesnt go above 30
+
+            totalAmmo += refillAmount; 
+            Destroy(other.gameObject); //Destroy the ammo box after touching the player
+
+            Debug.Log("Picked up AmmoBox! Total Ammo: " + totalAmmo);
+        }
+    }
+
 }
