@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 8343824193349687261}
   - component: {fileID: 496881620222815075}
   - component: {fileID: 361021797006092052}
+  - component: {fileID: 5758357855973522976}
   m_Layer: 0
   m_Name: SigmaPlayer
   m_TagString: Player
@@ -32,7 +33,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: -0, z: 0.9238796, w: -0.38268325}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2.5635433, y: 2.5635433, z: 2.5635433}
+  m_LocalScale: {x: 3, y: 3, z: 3}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6056608301415076835}
@@ -202,6 +203,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentHealth: 100
   maxHealth: 100
+--- !u!114 &5758357855973522976
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 573521620945052182}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ab89629d6e4abd439100ee4f94fb0d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 573521620945052182}
+  respawnPoint: {fileID: 0}
 --- !u!1 &2186429720992836567
 GameObject:
   m_ObjectHideFlags: 0
