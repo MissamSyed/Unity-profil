@@ -1,1 +1,17 @@
-VisualElement {}
+VisualElement {
+}
+
+.slot {
+    align-items: flex-start;
+    width: 64px;
+    height: 64px;
+    margin-top: 2px;
+    margin-right: 2px;
+    margin-bottom: 2px;
+    margin-left: 2px;
+}
+
+.slotItem {
+    min-width: 60px;
+    min-height: 60px;
+}
