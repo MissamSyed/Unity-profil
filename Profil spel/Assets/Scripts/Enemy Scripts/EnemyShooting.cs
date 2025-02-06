@@ -5,10 +5,20 @@ using UnityEngine;
 public class EnemyShooting : MonoBehaviour
 {
     public Transform player;           
-    public GameObject bulletPrefab;    
-    public Transform shootingPoint;    
     public float fireRate = 1f;        
+    public float shootingRange = 10f;   
     private float nextFireTime;        
+    public int damage = 20;            
+
+    public LineRenderer lineRenderer; 
+
+    void Start()
+    {
+        if (lineRenderer != null)
+        {
+            lineRenderer.enabled = false; 
+        }
+    }
 
     void Update()
     {
@@ -16,7 +26,7 @@ public class EnemyShooting : MonoBehaviour
         {
             AimAtPlayer();  
 
-            
+        
             if (Time.time >= nextFireTime)
             {
                 Shoot();
@@ -37,13 +47,33 @@ public class EnemyShooting : MonoBehaviour
     void Shoot()
     {
         
-        GameObject bullet = Instantiate(bulletPrefab, shootingPoint.position, shootingPoint.rotation);
-
-        
-        Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
-        if (rb != null)
+        if (lineRenderer != null)
         {
-            rb.velocity = bullet.transform.right * 10f; 
+            
+            lineRenderer.enabled = true;
+            lineRenderer.SetPosition(0, transform.position); 
+            lineRenderer.SetPosition(1, player.position); 
+
+            
+            RaycastHit2D hit = Physics2D.Raycast(transform.position, (player.position - transform.position).normalized, shootingRange);
+
+            if (hit.collider != null && hit.collider.CompareTag("Player"))
+            {
+                
+                hit.collider.gameObject.GetComponent<PlayerHealth>().TakeDamage(damage);
+            }
+
+            
+            Invoke("DisableLineRenderer", 0.1f);
+        }
+    }
+
+    void DisableLineRenderer()
+    {
+        if (lineRenderer != null)
+        {
+            lineRenderer.enabled = false; 
         }
     }
 }
+
