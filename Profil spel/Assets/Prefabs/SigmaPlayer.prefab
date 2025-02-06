@@ -180,7 +180,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fireRate: 0.7
-  maxShootDistance: 10
+  maxShootDistance: 12
   hitLayers:
     serializedVersion: 2
     m_Bits: 64

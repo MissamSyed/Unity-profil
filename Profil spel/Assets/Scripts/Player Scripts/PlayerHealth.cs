@@ -28,4 +28,6 @@ public class PlayerHealth : MonoBehaviour
         Debug.Log("Player has died.");
         Destroy(gameObject); // Example: Destroy the player GameObject
     }
+
+
 }
