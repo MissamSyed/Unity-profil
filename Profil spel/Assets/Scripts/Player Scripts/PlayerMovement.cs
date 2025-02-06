@@ -20,7 +20,7 @@ public class PlayerMovement : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         rb.interpolation = RigidbodyInterpolation2D.Interpolate; //For smoother movement
 
-        // Find the enemy by tag
+        //Find the enemy by tag
         GameObject enemyObject = GameObject.FindGameObjectWithTag("Enemy");
         if (enemyObject != null)
         {
@@ -34,64 +34,57 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        //Get input for movement
-        movement.x = Input.GetAxis("Horizontal");
-        movement.y = Input.GetAxis("Vertical");
-
-        //Get the mouse position in world space
+        // Get the mouse position in world space
         Vector3 mousePos = mainCamera.ScreenToWorldPoint(Input.mousePosition);
+        mousePos.z = transform.position.z; // Keep the Z position the same
 
-        //Ensure the Z position is set to the same as the player's Z (as it's a 2D game)
-        mousePos.z = transform.position.z;
-
-        //Calculate direction from the player to mouse position
+        // Calculate direction from player to mouse position
         Vector2 lookDir = (mousePos - transform.position).normalized;
 
-        //Calculate the angle to rotate to face the mouse
+        // Calculate the angle to rotate (adjust for a downward-facing sprite)
         float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg;
 
-        //Apply the rotation to the player object
-        transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
+        // Apply the rotation to the player (adjust for downward-facing sprite)
+        transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle + 90)); // Add 90 for a downward-facing sprite
     }
 
     void FixedUpdate()
     {
+        // Get input for movement (Horizontal and Vertical axes)
+        movement.x = Input.GetAxis("Horizontal");
+        movement.y = Input.GetAxis("Vertical");
+
+        // Normal movement logic (check distance to enemy)
         if (enemy != null)
         {
-            //Check distance to the enemy
             float distanceToEnemy = Vector2.Distance(transform.position, enemy.position);
 
-          
             if (distanceToEnemy > stoppingDistance)
             {
-                //Apply normal movement
+                // Apply normal movement
                 rb.velocity = movement * moveSpeed;
             }
             else
             {
-                //Calculate the direction from the player to the enemy 
+                // Calculate direction to stop near the enemy
                 Vector2 directionToEnemy = (enemy.position - transform.position).normalized;
+                Vector2 perpendicularDirection = new Vector2(-directionToEnemy.y, directionToEnemy.x); // Perpendicular movement to avoid moving directly towards the enemy
 
-                
-                Vector2 perpendicularDirection = new Vector2(-directionToEnemy.y, directionToEnemy.x); // Perpendicular to the enemy direction
-
-                
+                // Stop movement in the direction of the enemy
                 float dotProduct = Vector2.Dot(movement, directionToEnemy);
-
-                if (dotProduct > 0) 
+                if (dotProduct > 0)
                 {
-                    //Stop movement in the direction of the enemy but allow movement in different direction
                     movement = perpendicularDirection * movement.magnitude;
                 }
 
-                
                 rb.velocity = movement * moveSpeed;
             }
         }
         else
         {
-            //If no enemy exists, apply normal movement with no checking
+            // If no enemy exists, apply normal movement
             rb.velocity = movement * moveSpeed;
         }
     }
+
 }
