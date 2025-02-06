@@ -12,7 +12,7 @@ public class Knife : MonoBehaviour
         //Check if the player collided with the knife
         if (other.CompareTag("Player"))
         {
-            //Call the TakeDamage method on the PlayerHealth script
+            
             PlayerHealth playerHealth = other.GetComponent<PlayerHealth>();
             if (playerHealth != null)
             {

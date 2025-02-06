@@ -8,55 +8,54 @@ public class Spawner : MonoBehaviour
     [SerializeField] float minSpawnTime = 1f;
     [SerializeField] float maxSpawnTime = 2f;
     [SerializeField] float spawnDistanceMin = 0f;
-    [SerializeField] float spawnDistanceMax = 5f;  // Allow a more varied spawn distance
-    [SerializeField] float initialDelay = 1f;  // Delay before first enemy spawn
+    [SerializeField] float spawnDistanceMax = 5f;  
+    [SerializeField] float initialDelay = 1f;  
     private Vector2 screenBounds;
-    private GameObject player;  // Reference to the player object
+    private GameObject player;  
 
     void Start()
     {
-        // Get the player object (make sure it has a tag or reference to find it)
+        
         player = GameObject.FindWithTag("Player");
 
-        screenBounds = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height));  // Get the camera bounds
+        screenBounds = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height));  //Get the camera bounds to get the spawn locations
 
-        // Start the spawning coroutine
+        //Start the spawning 
         StartCoroutine(SpawnEnemyCoroutine());
     }
 
     IEnumerator SpawnEnemyCoroutine()
     {
-        // Wait for the initial delay before the first spawn
+        //Wait for the initial delay before the first spawn so it doesnt spawn directly when the game starts
         yield return new WaitForSeconds(initialDelay);
 
-        // Now, spawn enemies indefinitely
+        
         while (true)
         {
-            // Determine spawn position and spawn enemy
+            //Set spawn position and spawn enemy
             Vector2 spawnPosition = GetRandomSpawnPosition();
-            GameObject enemy = Instantiate(enemyPrefab, spawnPosition, Quaternion.identity);  // Spawn the enemy prefab at the calculated position
-
-            // Make sure the enemy follows the player
+            GameObject enemy = Instantiate(enemyPrefab, spawnPosition, Quaternion.identity);  //Spawn the enemy prefab
+           
             if (enemy != null)
             {
                 EnemyFollow enemyFollow = enemy.GetComponent<EnemyFollow>();
                 if (enemyFollow != null && player != null)
                 {
-                    enemyFollow.player = player.transform;  // Assign the player to the enemy's follow script
+                    enemyFollow.player = player.transform;  
                 }
             }
 
-            // Wait for a random amount of time before spawning the next enemy
+            //Wait for a random amount of time before spawning the next enemy
             float spawnTime = Random.Range(minSpawnTime, maxSpawnTime);
-            yield return new WaitForSeconds(spawnTime);  // Wait for the spawn time before next enemy spawn
+            yield return new WaitForSeconds(spawnTime);  
         }
     }
 
     Vector2 GetRandomSpawnPosition()
     {
-        // Randomize spawn position around the screen bounds
+        //Randomize spawn position around the screen bounds
         int side = Random.Range(0, 4);
-        float spawnDistance = Random.Range(spawnDistanceMin, spawnDistanceMax);  // Randomize spawn distance for variety
+        float spawnDistance = Random.Range(spawnDistanceMin, spawnDistanceMax);  
         Vector2 spawnPosition = Vector2.zero;
 
         switch (side)
