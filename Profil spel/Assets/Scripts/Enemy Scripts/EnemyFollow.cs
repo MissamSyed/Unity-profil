@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class EnemyFollow : MonoBehaviour
 {
-    public Transform player;
+    public Transform player;  // Reference to the player
     public float detectionRange = 5f;
     public float fieldOfViewAngle = 90f;
     public float moveSpeed = 2f;
@@ -38,5 +38,4 @@ public class EnemyFollow : MonoBehaviour
             // You can add logic for what happens if the enemy is not detecting the player
         }
     }
-
 }
