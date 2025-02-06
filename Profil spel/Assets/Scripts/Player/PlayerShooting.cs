@@ -10,7 +10,7 @@ public class PlayerShooting : MonoBehaviour
     [SerializeField] GameObject gun; // Reference to the gun object
 
     [SerializeField] int magazineSize = 10; // Bullets per magazine
-    [SerializeField] int totalAmmo = 30; // Total bullets available (reserves)
+    [SerializeField] int totalAmmo = 40; // Total bullets available (reserves)
     [SerializeField] float reloadTime = 1.5f; // Time taken to reload
 
     private int currentAmmo;
@@ -34,13 +34,10 @@ public class PlayerShooting : MonoBehaviour
             Debug.Log(isAutomatic ? "Fire Mode: Automatic" : "Fire Mode: Semi-Auto");
         }
 
-        // Semi-Auto (One shot per click)
         if (!isAutomatic && Input.GetButtonDown("Fire1"))
         {
             TryFire();
         }
-
-        // Automatic (Hold for continuous fire)
         if (isAutomatic && Input.GetButton("Fire1"))
         {
             TryFire();
