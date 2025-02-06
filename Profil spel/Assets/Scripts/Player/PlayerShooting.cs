@@ -9,9 +9,15 @@ public class PlayerShooting : MonoBehaviour
     [SerializeField] LayerMask hitLayers; //Layers to check for hits so only this takes damage
     [SerializeField] GameObject gun; //Reference to the gun object
 
+<<<<<<< HEAD
+    [SerializeField] int magazineSize = 10; // Bullets per magazine
+    [SerializeField] int totalAmmo = 40; // Total bullets available (reserves)
+    [SerializeField] float reloadTime = 1.5f; // Time taken to reload
+=======
     [SerializeField] int magazineSize = 10; // Bullets per magazine 
     [SerializeField] int totalAmmo = 30; //Total bullets available in whole (reserves)
     [SerializeField] float reloadTime = 1.5f; //Time to reload
+>>>>>>> 00166215f320011934e8676badcbc00589daf7a6
 
     private int currentAmmo;
     private float nextFireTime = 0f;
@@ -34,13 +40,19 @@ public class PlayerShooting : MonoBehaviour
             Debug.Log(isAutomatic ? "Fire Mode: Automatic" : "Fire Mode: Semi-Auto");
         }
 
+<<<<<<< HEAD
+=======
         //Semi-Auto (One shot per click)
+>>>>>>> 00166215f320011934e8676badcbc00589daf7a6
         if (!isAutomatic && Input.GetButtonDown("Fire1"))
         {
             TryFire();
         }
+<<<<<<< HEAD
+=======
 
         //Automatic (Hold for continuous fire)
+>>>>>>> 00166215f320011934e8676badcbc00589daf7a6
         if (isAutomatic && Input.GetButton("Fire1"))
         {
             TryFire();
