@@ -140,6 +140,7 @@ GameObject:
   - component: {fileID: 519420029}
   - component: {fileID: 519420033}
   - component: {fileID: 519420034}
+  - component: {fileID: 519420035}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -267,6 +268,22 @@ MonoBehaviour:
   m_CameraActivatedEvent:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &519420035
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 519420028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_PanelSettings: {fileID: 11400000, guid: 48cdfa48dbad86145acbd63f0a3a667e, type: 2}
+  m_ParentUI: {fileID: 0}
+  sourceAsset: {fileID: 9197481963319205126, guid: 0c040ea340001ee4fa039d9af25b89eb, type: 3}
+  m_SortingOrder: 0
 --- !u!1 &719795477
 GameObject:
   m_ObjectHideFlags: 0
@@ -298,6 +315,7 @@ Transform:
   m_Children:
   - {fileID: 519420032}
   - {fileID: 1356575894}
+  - {fileID: 929503376}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &741644432
@@ -462,12 +480,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 929503369}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -169.3076, y: -91.4255, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -172.23238, y: -97.17447, z: 0.06804584}
   m_LocalScale: {x: 0.05850976, y: 0.15509371, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 719795478}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1137442670
 GameObject:
@@ -1097,7 +1115,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.01, y: 1.52}
+    oldSize: {x: 3.15625, y: 4.75}
     newSize: {x: 1.01, y: 1.52}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -1112,7 +1130,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 0}
+    m_TransformParent: {fileID: 719795478}
     m_Modifications:
     - target: {fileID: 352269757191621138, guid: 95b46f049b9ad2243a3e855b646c7e70, type: 3}
       propertyPath: m_LocalScale.x
@@ -1272,7 +1290,6 @@ Animator:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 1705744026}
   - {fileID: 719795478}
   - {fileID: 1149371069}
   - {fileID: 1137442671}
