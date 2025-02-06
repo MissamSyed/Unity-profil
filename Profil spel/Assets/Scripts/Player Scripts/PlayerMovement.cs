@@ -14,7 +14,9 @@ public class PlayerMovement : MonoBehaviour
     private Transform enemy; 
 
     void Start()
+
     {
+        
         rb = GetComponent<Rigidbody2D>();
         rb.interpolation = RigidbodyInterpolation2D.Interpolate; //For smoother movement
 
