@@ -4,47 +4,62 @@ using UnityEngine;
 
 public class PlayerShooting : MonoBehaviour
 {
-    [SerializeField] float fireRate = 0.2f; // Fire rate for automatic mode
-    [SerializeField] float maxShootDistance = 10f; // Max shooting range
-    [SerializeField] LayerMask hitLayers; // Layers to check for hits
-    [SerializeField] GameObject gun; // Reference to the gun object
+    [SerializeField] float fireRate = 0.1f; //Fire rate for automatic mode
+    [SerializeField] float maxShootDistance = 10f; //Max shooting range
+    [SerializeField] LayerMask hitLayers; //Layers to check for hits so only this takes damage
+    [SerializeField] GameObject gun; //Reference to the gun object
 
+<<<<<<< HEAD
     [SerializeField] int magazineSize = 10; // Bullets per magazine
     [SerializeField] int totalAmmo = 40; // Total bullets available (reserves)
     [SerializeField] float reloadTime = 1.5f; // Time taken to reload
+=======
+    [SerializeField] int magazineSize = 10; // Bullets per magazine 
+    [SerializeField] int totalAmmo = 30; //Total bullets available in whole (reserves)
+    [SerializeField] float reloadTime = 1.5f; //Time to reload
+>>>>>>> 00166215f320011934e8676badcbc00589daf7a6
 
     private int currentAmmo;
     private float nextFireTime = 0f;
     private bool isReloading = false;
-    private bool isAutomatic = false; // Fire mode: false = single, true = auto
+    private bool isAutomatic = false; //Fire mode: false = Semi, true = Auto
 
     void Start()
     {
-        currentAmmo = magazineSize; // Start with a full magazine
+        currentAmmo = magazineSize; //Start with a full magazine
     }
 
     void Update()
     {
-        if (isReloading) return; // Prevent shooting while reloading
+        if (isReloading) return; //No shooting while reload
 
-        // Fire Mode Selection
+        //Mode selection with "V"
         if (Input.GetKeyDown(KeyCode.V))
         {
             isAutomatic = !isAutomatic;
             Debug.Log(isAutomatic ? "Fire Mode: Automatic" : "Fire Mode: Semi-Auto");
         }
 
+<<<<<<< HEAD
+=======
+        //Semi-Auto (One shot per click)
+>>>>>>> 00166215f320011934e8676badcbc00589daf7a6
         if (!isAutomatic && Input.GetButtonDown("Fire1"))
         {
             TryFire();
         }
+<<<<<<< HEAD
+=======
+
+        //Automatic (Hold for continuous fire)
+>>>>>>> 00166215f320011934e8676badcbc00589daf7a6
         if (isAutomatic && Input.GetButton("Fire1"))
         {
             TryFire();
-            fireRate = 0.2f;
+            fireRate = 0.1f;
         }
 
-        // Reloading
+        //Reloading mechanic
         if (Input.GetKeyDown(KeyCode.R))
         {
             StartCoroutine(Reload());
@@ -64,15 +79,19 @@ public class PlayerShooting : MonoBehaviour
         }
     }
 
+    //Hit and scan firing and ammo mechanic
     void Fire()
     {
-        currentAmmo--; // Reduce ammo
+        currentAmmo--; //Reduce ammo
 
         Vector2 gunPosition = gun.transform.position;
         Vector2 gunDirection = gun.transform.up;
         Vector2 endPoint = gunPosition + (gunDirection * maxShootDistance);
 
-        RaycastHit2D hit = Physics2D.Raycast(gunPosition, gunDirection, maxShootDistance, hitLayers);
+        //Ignore the knife because of the Ignore Raycast tag
+        int layerMask = hitLayers & ~LayerMask.GetMask("Ignore Raycast");
+
+        RaycastHit2D hit = Physics2D.Raycast(gunPosition, gunDirection, maxShootDistance, layerMask);
 
         if (hit.collider != null)
         {
@@ -85,6 +104,7 @@ public class PlayerShooting : MonoBehaviour
                 if (enemy != null)
                 {
                     enemy.TakeDamage(35);
+                    
                 }
             }
         }
@@ -92,13 +112,15 @@ public class PlayerShooting : MonoBehaviour
         StartCoroutine(ShowDebugRay(gunPosition, endPoint));
     }
 
+    //Debug Hit and scan system
     IEnumerator ShowDebugRay(Vector2 start, Vector2 end)
     {
-        float duration = 0.1f;
+        float duration = 0.08f;
         Debug.DrawLine(start, end, Color.red, duration);
         yield return new WaitForSeconds(duration);
     }
 
+    //Reload mechanic
     IEnumerator Reload()
     {
         if (totalAmmo > 0 && currentAmmo < magazineSize)

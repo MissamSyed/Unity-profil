@@ -1,29 +1,31 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    public int health = 100;
-    public delegate void DeathEvent(); // Event to handle death
-    public event DeathEvent onDeath;   // Declare the event
+    public int enemyHealth = 100;
+    public delegate void DeathEvent(); 
+    public event DeathEvent onDeath; //Declare the event
 
-    // Take damage method
+    //Damage mechanic
     public void TakeDamage(int damageAmount)
     {
-        health -= damageAmount;
-        Debug.Log("Enemy took damage. Health left: " + health);
+        enemyHealth -= damageAmount;
+        Debug.Log("Enemy took damage. Health left: " + enemyHealth);
 
-        // If health drops below or equals 0, call Die method
-        if (health <= 0)
+        //If health drops below or is 0, die
+        if (enemyHealth <= 0)
         {
             Die();
         }
     }
 
-    // Handle death logic
+    //Death mechanic 
     void Die()
     {
         Debug.Log("Enemy died!");
-        onDeath?.Invoke(); // Trigger the death event
-        Destroy(gameObject);  // Destroy the current enemy object
+        onDeath?.Invoke(); 
+        Destroy(gameObject); // Destroy the current enemy object
     }
 }

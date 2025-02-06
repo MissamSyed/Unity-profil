@@ -153,7 +153,7 @@ Transform:
   m_GameObject: {fileID: 466562448}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -4.5499997, y: -2.15, z: -9.931954}
+  m_LocalPosition: {x: -11.65, y: -1.99, z: -9.931954}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -207,21 +207,33 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 662037392962512542, guid: 99dd2e80dc880234da4523ad3f9479e7, type: 3}
+      propertyPath: enemyHealth
+      value: 600
+      objectReference: {fileID: 0}
     - target: {fileID: 4070372955072770513, guid: 99dd2e80dc880234da4523ad3f9479e7, type: 3}
       propertyPath: player
       value: 
       objectReference: {fileID: 138408940}
+    - target: {fileID: 4070372955072770513, guid: 99dd2e80dc880234da4523ad3f9479e7, type: 3}
+      propertyPath: rotationSpeed
+      value: 400
+      objectReference: {fileID: 0}
     - target: {fileID: 6517465625240172625, guid: 99dd2e80dc880234da4523ad3f9479e7, type: 3}
       propertyPath: m_Name
       value: Enemy 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7846482325984723913, guid: 99dd2e80dc880234da4523ad3f9479e7, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7877893460074655327, guid: 99dd2e80dc880234da4523ad3f9479e7, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 3.52
+      value: 3.6108353
       objectReference: {fileID: 0}
     - target: {fileID: 7877893460074655327, guid: 99dd2e80dc880234da4523ad3f9479e7, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.22
+      value: 0.23000035
       objectReference: {fileID: 0}
     - target: {fileID: 7877893460074655327, guid: 99dd2e80dc880234da4523ad3f9479e7, type: 3}
       propertyPath: m_LocalPosition.z
@@ -229,19 +241,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7877893460074655327, guid: 99dd2e80dc880234da4523ad3f9479e7, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.00000041723246
       objectReference: {fileID: 0}
     - target: {fileID: 7877893460074655327, guid: 99dd2e80dc880234da4523ad3f9479e7, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 7877893460074655327, guid: 99dd2e80dc880234da4523ad3f9479e7, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 7877893460074655327, guid: 99dd2e80dc880234da4523ad3f9479e7, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7877893460074655327, guid: 99dd2e80dc880234da4523ad3f9479e7, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -253,7 +265,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7877893460074655327, guid: 99dd2e80dc880234da4523ad3f9479e7, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
+      value: 180
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -323,7 +335,7 @@ Transform:
   m_GameObject: {fileID: 1998570138}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -4.5499997, y: -2.15, z: -9.931954}
+  m_LocalPosition: {x: -11.65, y: -1.99, z: -9.931954}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -546,17 +558,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 496881620222815075, guid: 83d5a367ba0e5a24fa0badb0c9b140b3, type: 3}
+      propertyPath: maxShootDistance
+      value: 12
+      objectReference: {fileID: 0}
     - target: {fileID: 573521620945052182, guid: 83d5a367ba0e5a24fa0badb0c9b140b3, type: 3}
       propertyPath: m_Name
-      value: GerSoldier_DebugGun_Shoot_0
+      value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 3106288413251525836, guid: 83d5a367ba0e5a24fa0badb0c9b140b3, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.01
+      value: -7.09
       objectReference: {fileID: 0}
     - target: {fileID: 3106288413251525836, guid: 83d5a367ba0e5a24fa0badb0c9b140b3, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.29
+      value: 0.45
       objectReference: {fileID: 0}
     - target: {fileID: 3106288413251525836, guid: 83d5a367ba0e5a24fa0badb0c9b140b3, type: 3}
       propertyPath: m_LocalPosition.z

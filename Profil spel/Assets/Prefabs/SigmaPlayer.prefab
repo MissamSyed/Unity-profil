@@ -13,8 +13,8 @@ GameObject:
   - component: {fileID: 2711359461649626580}
   - component: {fileID: 5091596570885085884}
   - component: {fileID: 8343824193349687261}
-  - component: {fileID: 8728676426830167892}
-  - component: {fileID: 7014336447818069698}
+  - component: {fileID: 496881620222815075}
+  - component: {fileID: 361021797006092052}
   m_Layer: 0
   m_Name: SigmaPlayer
   m_TagString: Player
@@ -167,7 +167,7 @@ MonoBehaviour:
   moveSpeed: 5
   mainCamera: {fileID: 0}
   stoppingDistance: 1
---- !u!114 &8728676426830167892
+--- !u!114 &496881620222815075
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -176,19 +176,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 573521620945052182}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bc2457bc868c45e4daee3b2547f04b4f, type: 3}
+  m_Script: {fileID: 11500000, guid: ba62512299635084da59dcd772ab21c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fireRate: 0.8
+  fireRate: 0.7
   maxShootDistance: 10
   hitLayers:
     serializedVersion: 2
-    m_Bits: 8
+    m_Bits: 64
   gun: {fileID: 2186429720992836567}
-  magazineSize: 5
-  totalAmmo: 15
+  magazineSize: 10
+  totalAmmo: 30
   reloadTime: 2
---- !u!114 &7014336447818069698
+--- !u!114 &361021797006092052
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -197,7 +197,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 573521620945052182}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b854adfe8183b384abcd26a2e5320a15, type: 3}
+  m_Script: {fileID: 11500000, guid: 3a1dc953454bc8746a83b169c3843228, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   currentHealth: 100
