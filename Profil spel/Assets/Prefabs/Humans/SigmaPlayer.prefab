@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 496881620222815075}
   - component: {fileID: 361021797006092052}
   - component: {fileID: 5758357855973522976}
+  - component: {fileID: 2343899725561416662}
   m_Layer: 0
   m_Name: SigmaPlayer
   m_TagString: Player
@@ -167,7 +168,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 5
   mainCamera: {fileID: 0}
-  stoppingDistance: 1
+  stoppingDistance: 1.3
 --- !u!114 &496881620222815075
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -180,13 +181,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba62512299635084da59dcd772ab21c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animator: {fileID: 2343899725561416662}
+  shootAnimationTrigger: Shoot
   fireRate: 0.7
-  maxShootDistance: 12
+  maxShootDistance: 16
   hitLayers:
     serializedVersion: 2
     m_Bits: 64
   gun: {fileID: 2186429720992836567}
-  magazineSize: 10
+  magazineSize: 15
   totalAmmo: 30
   reloadTime: 2
 --- !u!114 &361021797006092052
@@ -217,6 +220,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 573521620945052182}
   respawnPoint: {fileID: 0}
+--- !u!95 &2343899725561416662
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 573521620945052182}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 0696cb33a4adf3f42849158e36bdd61a, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &2186429720992836567
 GameObject:
   m_ObjectHideFlags: 0
