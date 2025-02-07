@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class PlayerHealth : MonoBehaviour
 {
-    public int currentHealth = 100;  //Starting health of the player
-    public int maxHealth = 100;      //Maximum health of the player
+    public int currentHealth = 100;  
+    public int maxHealth = 100;      
 
-    //Take damage mechanic
+    //Take damage system
     public void TakeDamage(int damageAmount)
     {
         currentHealth -= damageAmount; //Reduce health by the damage amount
@@ -22,11 +22,11 @@ public class PlayerHealth : MonoBehaviour
         Debug.Log("Player's current health: " + currentHealth);
     }
 
-    //Player death mechanic
+    //Player death system
     private void Die()
     {
         Debug.Log("Player has died.");
-        Destroy(gameObject); // Example: Destroy the player GameObject
+        Destroy(gameObject);
     }
 
 
