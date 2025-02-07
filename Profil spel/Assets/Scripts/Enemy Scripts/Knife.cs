@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Knife : MonoBehaviour
 {
-    public int damageAmount = 10; //Amount of damage to deal to the player
+    public int damageAmount = 10; 
 
     
     private void OnTriggerEnter2D(Collider2D other)

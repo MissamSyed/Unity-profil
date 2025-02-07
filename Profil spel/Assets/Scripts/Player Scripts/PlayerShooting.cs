@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerShooting : MonoBehaviour
 {
@@ -79,7 +80,7 @@ public class PlayerShooting : MonoBehaviour
         animator.SetTrigger(shootAnimationTrigger); 
         animator.SetBool("IsShooting", true); 
 
-        // Logic for raycasting (Hit and scan method)
+        //Raycasting system (Hit and scan method)
         Vector2 gunPosition = gun.transform.position;
         Vector2 gunDirection = gun.transform.up;
         Vector2 endPoint = gunPosition + (gunDirection * maxShootDistance);

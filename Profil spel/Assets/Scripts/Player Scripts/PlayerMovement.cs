@@ -82,7 +82,7 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
-            //If no enemy exists, apply normal movement (Isn't going to happen really)
+            //If no enemy exists, apply normal movement 
             rb.velocity = movement * moveSpeed;
         }
     }
