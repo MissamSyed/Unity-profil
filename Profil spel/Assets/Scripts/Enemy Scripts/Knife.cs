@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Knife : MonoBehaviour
 {
-    public int damageAmount = 10; //Amount of damage to deal to the player
+    public int damageAmount = 10; 
 
     
     private void OnTriggerEnter2D(Collider2D other)
@@ -12,7 +12,7 @@ public class Knife : MonoBehaviour
         //Check if the player collided with the knife
         if (other.CompareTag("Player"))
         {
-            //Call the TakeDamage method on the PlayerHealth script
+            
             PlayerHealth playerHealth = other.GetComponent<PlayerHealth>();
             if (playerHealth != null)
             {
