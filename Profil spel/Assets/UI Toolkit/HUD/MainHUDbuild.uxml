@@ -3,7 +3,7 @@
     <ui:VisualElement name="HUD_sett" style="flex-grow: 1;">
         <ui:VisualElement name="HUD" style="flex-grow: 1; position: absolute; height: 149px; width: 520px; top: 538px; left: 682px; background-image: url(&quot;project://database/Assets/UI%20Toolkit/HUD%20sprites/HudBackground_64x256.png?fileID=21300000&amp;guid=a1b5264560aa52f44a2a594cc112d461&amp;type=3#HudBackground_64x256&quot;); -unity-background-image-tint-color: rgb(127, 123, 123); background-color: rgba(0, 0, 0, 0); border-top-width: 2px; border-right-width: 2px; border-bottom-width: 2px; border-left-width: 2px;">
             <ui:VisualElement name="Ammo_UI" style="flex-grow: 1; height: 10px; width: 131px; position: relative; top: 1px; left: 50px;">
-                <ui:VisualElement name="Ammo_Sprite" style="flex-grow: 1; background-image: none;" />
+                <ui:VisualElement name="Ammo_Sprite" style="flex-grow: 1; background-image: url(&quot;project://database/Assets/UI%20Toolkit/HUD%20sprites/DebuggunMagUI_32x32_SH.png?fileID=21300000&amp;guid=59ab7812694c3e449bddc76ae064baaa&amp;type=3#DebuggunMagUI_32x32_SH&quot;);" />
             </ui:VisualElement>
             <ui:VisualElement name="Slot_container" style="flex-grow: 0; flex-wrap: wrap; flex-direction: row; justify-content: center; max-width: 348px; padding-top: 2px; padding-right: 2px; padding-bottom: 2px; padding-left: 2px; border-left-color: rgba(0, 0, 0, 0); border-right-color: rgba(0, 0, 0, 0); border-top-color: rgba(0, 0, 0, 0); border-bottom-color: rgba(0, 0, 0, 0);" />
         </ui:VisualElement>
