@@ -1,20 +1,41 @@
 using UnityEngine;
-using UnityEngine.UI; // Import Unity's UI namespace to interact with UI elements
+using UnityEngine.UIElements;
 
-public class PlayButtonSound : MonoBehaviour
+public class ButtonSounds : MonoBehaviour
 {
-    public AudioSource audioSource; // Reference to the AudioSource
-    public Button yourButton; // Reference to the UI Button
+    public AudioSource audioSource;
+    public AudioClip clickSound;
 
-    void Start()
+    private Button startButton;
+    private Button quitButton;
+    private Button settingsButton;
+
+    void OnEnable()
     {
-        // Ensure the button has a listener to call PlaySound() when clicked
-        yourButton.onClick.AddListener(PlaySound);
+        // Load the UI Document
+        var uiDocument = GetComponent<UIDocument>();
+        var root = uiDocument.rootVisualElement;
+
+        // Get buttons from UI Toolkit
+        startButton = root.Q<Button>("Start_Button");
+        quitButton = root.Q<Button>("Quit_Button");
+        settingsButton = root.Q<Button>("Settings_Button");
+
+        // Add click event listeners
+        startButton.clicked += PlaySound;
+        quitButton.clicked += PlaySound;
+        settingsButton.clicked += PlaySound;
     }
 
-    // This method will play the sound
     void PlaySound()
     {
-        audioSource.Play(); // Play the audio clip on the AudioSource
+        if (audioSource != null && clickSound != null)
+        {
+            audioSource.PlayOneShot(clickSound);
+        }
+        else
+        {
+            Debug.LogError("AudioSource or ClickSound is missing!");
+        }
     }
 }
