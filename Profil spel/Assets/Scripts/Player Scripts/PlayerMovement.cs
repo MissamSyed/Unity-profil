@@ -11,27 +11,16 @@ public class PlayerMovement : MonoBehaviour
 
     private Rigidbody2D rb;
     private Vector2 movement;
-    private Transform enemy; 
+
 
     void Start()
 
     {
-        
+
         rb = GetComponent<Rigidbody2D>();
         rb.interpolation = RigidbodyInterpolation2D.Interpolate; //Smoother movement
 
-        
-        GameObject enemyObject = GameObject.FindGameObjectWithTag("Enemy");
-        if (enemyObject != null)
-        {
-            enemy = enemyObject.transform; 
-        }
-        else
-        {
-            Debug.LogWarning("No object with the 'Enemy' tag found in the scene.");
-        }
     }
-
     void Update()
     {
         // Get the mouse position in world space
@@ -54,37 +43,7 @@ public class PlayerMovement : MonoBehaviour
         movement.x = Input.GetAxis("Horizontal");
         movement.y = Input.GetAxis("Vertical");
 
-       
-        if (enemy != null)
-        {
-            float distanceToEnemy = Vector2.Distance(transform.position, enemy.position);
-
-            if (distanceToEnemy > stoppingDistance)
-            {
-                
-                rb.velocity = movement * moveSpeed;
-            }
-            else
-            {
-                //Direction to stop near the enemy
-                Vector2 directionToEnemy = (enemy.position - transform.position).normalized;
-                Vector2 perpendicularDirection = new Vector2(-directionToEnemy.y, directionToEnemy.x); 
-
-                //Stop movement in enemy direction
-                float dotProduct = Vector2.Dot(movement, directionToEnemy);
-                if (dotProduct > 0)
-                {
-                    movement = perpendicularDirection * movement.magnitude;
-                }
-
-                rb.velocity = movement * moveSpeed;
-            }
-        }
-        else
-        {
-            //If no enemy exists, apply normal movement 
-            rb.velocity = movement * moveSpeed;
-        }
+        rb.velocity = movement * moveSpeed;
     }
 
 }
