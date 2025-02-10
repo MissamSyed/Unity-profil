@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerHealth : MonoBehaviour
 {
     public int currentHealth = 100;  
-    public int maxHealth = 100;      
+    public int maxHealth = 100;
+    
 
     //Take damage system
     public void TakeDamage(int damageAmount)
@@ -16,17 +18,31 @@ public class PlayerHealth : MonoBehaviour
         if (currentHealth <= 0)
         {
             currentHealth = 0;
-            Die(); 
+            Respawn(); 
         }
 
         Debug.Log("Player's current health: " + currentHealth);
     }
 
-    //Player death system
-    private void Die()
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        Debug.Log("Player has died.");
-        Destroy(gameObject);
+        if (other.CompareTag("HealthItem"))
+        {
+            
+            Destroy(other.gameObject); //Destroy the ammo box after touching the player
+
+            Debug.Log("Picked Up Healing Item: ");
+        }
+    }
+
+    //Player death system
+    private void Respawn()
+    {
+            
+     Scene currentScene = SceneManager.GetActiveScene();
+     SceneManager.LoadScene(currentScene.name);
+
+
     }
 
 
