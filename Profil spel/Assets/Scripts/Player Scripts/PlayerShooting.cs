@@ -6,7 +6,8 @@ using UnityEngine.InputSystem;
 public class PlayerShooting : MonoBehaviour
 {
     [SerializeField] private Animator animator;  
-    [SerializeField] private string shootAnimationTrigger = "Shoot"; 
+    [SerializeField] private string shootAnimationTrigger = "Shoot";
+    [SerializeField] private string reloadAnimationTrigger = "Reload";
 
     [SerializeField] float fireRate = 0.1f; 
     [SerializeField] float maxShootDistance = 10f; 
@@ -130,6 +131,10 @@ public class PlayerShooting : MonoBehaviour
     //Reload mechanic
     IEnumerator Reload()
     {
+        animator.SetTrigger(reloadAnimationTrigger);
+        animator.SetBool("IsReloading", true);
+
+
         if (totalAmmo > 0 && currentAmmo < magazineSize)
         {
             isReloading = true;
@@ -150,6 +155,15 @@ public class PlayerShooting : MonoBehaviour
         {
             Debug.Log("No more ammo left!");
         }
+
+        StartCoroutine(StopReloadingAnimation());
+    }
+
+    IEnumerator StopReloadingAnimation()
+    {
+
+        yield return new WaitForSeconds(1f);
+        animator.SetBool("IsReloading", false); //Set IsShooting to false to stop the animation
     }
 
     private void OnTriggerEnter2D(Collider2D other)
