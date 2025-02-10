@@ -177,12 +177,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 0}
-  detectionRange: 10
+  detectionRange: 20
   fieldOfViewAngle: 360
   moveSpeed: 4
   rotationSpeed: 300
   stoppingDistance: 1
-  minDistance: 8
 --- !u!114 &3284944009084380824
 MonoBehaviour:
   m_ObjectHideFlags: 0

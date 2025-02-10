@@ -5,55 +5,55 @@ using UnityEngine.InputSystem;
 
 public class PlayerShooting : MonoBehaviour
 {
-    [SerializeField] private Animator animator;  
+    [SerializeField] private Animator animator;
     [SerializeField] private string shootAnimationTrigger = "Shoot";
     [SerializeField] private string reloadAnimationTrigger = "Reload";
 
-    [SerializeField] float fireRate = 0.1f; 
-    [SerializeField] float maxShootDistance = 10f; 
-    [SerializeField] LayerMask hitLayers; 
-    [SerializeField] GameObject gun; 
+    [SerializeField] float fireRate = 0.1f;
+    [SerializeField] float maxShootDistance = 10f;
+    [SerializeField] LayerMask hitLayers;
+    [SerializeField] GameObject gun;
 
-    [SerializeField] int magazineSize = 10; 
-    [SerializeField] int totalAmmo = 30; 
-    [SerializeField] float reloadTime = 1.5f; 
+    [SerializeField] int magazineSize = 10;
+    [SerializeField] int totalAmmo = 30;
+    [SerializeField] float reloadTime = 1.2f;
 
     private int currentAmmo;
     private float nextFireTime = 0f;
     private bool isReloading = false;
-    private bool isAutomatic = false; //Fire mode: false = Semi, true = Auto
+    private bool isAutomatic = false; // Fire mode: false = Semi, true = Auto
 
     void Start()
     {
-        currentAmmo = magazineSize; //Start with a full magazine
+        currentAmmo = magazineSize; // Start with a full magazine
     }
 
     void Update()
     {
-        if (isReloading) return; //No shooting while reload
+        if (isReloading) return; // No shooting while reloading
 
-        //Mode selection with "V"
+        // Mode selection with "V"
         if (Input.GetKeyDown(KeyCode.V))
         {
             isAutomatic = !isAutomatic;
             Debug.Log(isAutomatic ? "Fire Mode: Automatic" : "Fire Mode: Semi-Auto");
         }
 
-        //Semi-Auto 
+        // Semi-Auto
         if (!isAutomatic && Input.GetButtonDown("Fire1"))
         {
             TryFire();
         }
 
-        //Automatic 
+        // Automatic
         if (isAutomatic && Input.GetButton("Fire1"))
         {
             TryFire();
             fireRate = 0.1f;
         }
 
-        //Reloading 
-        if (Input.GetKeyDown(KeyCode.R))
+        // Reloading
+        if (Input.GetKeyDown(KeyCode.R) && currentAmmo < magazineSize && !isReloading) // Ensure reload can only happen once at a time
         {
             StartCoroutine(Reload());
         }
@@ -72,16 +72,16 @@ public class PlayerShooting : MonoBehaviour
         }
     }
 
-    //Hit and scan firing and ammo mechanic
+    // Hit and scan firing and ammo mechanic
     void Fire()
     {
-        currentAmmo--; //Reduce ammo from the mag
+        currentAmmo--; // Reduce ammo from the mag
 
-        //Trigger shooting animation and set IsShooting to true to start it
-        animator.SetTrigger(shootAnimationTrigger); 
-        animator.SetBool("IsShooting", true); 
+        // Trigger shooting animation and set IsShooting to true to start it
+        animator.SetTrigger(shootAnimationTrigger);
+        animator.SetBool("IsShooting", true);
 
-        //Raycasting system (Hit and scan method)
+        // Raycasting system (Hit and scan method)
         Vector2 gunPosition = gun.transform.position;
         Vector2 gunDirection = gun.transform.up;
         Vector2 endPoint = gunPosition + (gunDirection * maxShootDistance);
@@ -100,27 +100,23 @@ public class PlayerShooting : MonoBehaviour
                 Enemy enemy = hit.collider.GetComponent<Enemy>();
                 if (enemy != null)
                 {
-                    enemy.TakeDamage(35); //Damage to enemy
+                    enemy.TakeDamage(35); // Damage to enemy
                 }
             }
         }
 
         StartCoroutine(ShowDebugRay(gunPosition, endPoint));
 
-       
-        StartCoroutine(StopShootingAnimation());  
+        StartCoroutine(StopShootingAnimation());
     }
 
-   
     IEnumerator StopShootingAnimation()
     {
-        
-        yield return new WaitForSeconds(0.25f); 
-        animator.SetBool("IsShooting", false); //Set IsShooting to false to stop the animation
+        yield return new WaitForSeconds(0.25f); // Wait for animation to finish
+        animator.SetBool("IsShooting", false); // Set IsShooting to false to stop the animation
     }
 
-
-    //Debug Hit and scan system
+    // Debug Hit and scan system
     IEnumerator ShowDebugRay(Vector2 start, Vector2 end)
     {
         float duration = 0.08f;
@@ -128,56 +124,44 @@ public class PlayerShooting : MonoBehaviour
         yield return new WaitForSeconds(duration);
     }
 
-    //Reload mechanic
+    // Reload mechanic (Exact same flow as shooting)
     IEnumerator Reload()
     {
-        animator.SetTrigger(reloadAnimationTrigger);
-        animator.SetBool("IsReloading", true);
+        isReloading = true; // Prevent multiple reloads at the same time
 
+        animator.SetTrigger(reloadAnimationTrigger); // Trigger the reload animation
+        animator.SetBool("IsReloading", true); // Set reload state in the animator
 
-        if (totalAmmo > 0 && currentAmmo < magazineSize)
-        {
-            isReloading = true;
-            Debug.Log("Reloading...");
+        Debug.Log("Reloading...");
 
-            yield return new WaitForSeconds(reloadTime);
+        yield return new WaitForSeconds(reloadTime); // Wait for the reload animation to finish
 
-            int ammoNeeded = magazineSize - currentAmmo;
-            int ammoToReload = Mathf.Min(ammoNeeded, totalAmmo);
+        // Calculate how much ammo we can reload
+        int ammoNeeded = magazineSize - currentAmmo;
+        int ammoToReload = Mathf.Min(ammoNeeded, totalAmmo);
 
-            currentAmmo += ammoToReload;
-            totalAmmo -= ammoToReload;
+        currentAmmo += ammoToReload;
+        totalAmmo -= ammoToReload;
 
-            isReloading = false;
-            Debug.Log("Reloaded! Ammo: " + currentAmmo + "/" + totalAmmo);
-        }
-        else
-        {
-            Debug.Log("No more ammo left!");
-        }
+        Debug.Log("Reloaded! Ammo: " + currentAmmo + "/" + totalAmmo);
 
-        StartCoroutine(StopReloadingAnimation());
-    }
-
-    IEnumerator StopReloadingAnimation()
-    {
-
-        yield return new WaitForSeconds(1f);
-        animator.SetBool("IsReloading", false); //Set IsShooting to false to stop the animation
+        // Stop reload animation after the time
+        yield return new WaitForSeconds(0.2f); // Small buffer to ensure the reload animation finishes
+        animator.SetBool("IsReloading", false); // Stop reload animation state
+        isReloading = false; // Allow reload again in the future
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("AmmoBox"))
         {
-            int ammoNeeded = 30 - totalAmmo; 
-            int refillAmount = Mathf.Max(0, ammoNeeded); //Checks so it doesnt go above 30
+            int ammoNeeded = 30 - totalAmmo;
+            int refillAmount = Mathf.Max(0, ammoNeeded); // Ensures ammo doesn’t go over the max limit
 
-            totalAmmo += refillAmount; 
-            Destroy(other.gameObject); //Destroy the ammo box after touching the player
+            totalAmmo += refillAmount;
+            Destroy(other.gameObject); // Destroy the ammo box after picking it up
 
             Debug.Log("Picked up AmmoBox! Total Ammo: " + totalAmmo);
         }
     }
-
 }
