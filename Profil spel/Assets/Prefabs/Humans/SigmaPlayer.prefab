@@ -15,8 +15,8 @@ GameObject:
   - component: {fileID: 8343824193349687261}
   - component: {fileID: 496881620222815075}
   - component: {fileID: 361021797006092052}
-  - component: {fileID: 5758357855973522976}
-  m_Layer: 0
+  - component: {fileID: 2343899725561416662}
+  m_Layer: 8
   m_Name: SigmaPlayer
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -82,8 +82,8 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_Sprite: {fileID: -1241590906, guid: f9607c5630936bb4aadc049abd314836, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 0
-  m_FlipY: 0
+  m_FlipX: 1
+  m_FlipY: 1
   m_DrawMode: 0
   m_Size: {x: 1, y: 1.5}
   m_AdaptiveModeThreshold: 0.5
@@ -123,7 +123,7 @@ CircleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.09, y: 0.08}
+  m_Offset: {x: 0.09, y: -0.08}
   serializedVersion: 2
   m_Radius: 0.6
 --- !u!50 &5091596570885085884
@@ -166,8 +166,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 5
-  mainCamera: {fileID: 0}
-  stoppingDistance: 1
+  smoothTime: 0.2
+  rotationSpeed: 600
 --- !u!114 &496881620222815075
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -180,13 +180,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba62512299635084da59dcd772ab21c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animator: {fileID: 2343899725561416662}
+  shootAnimationTrigger: Shoot
+  reloadAnimationTrigger: Reload
   fireRate: 0.7
-  maxShootDistance: 12
+  maxShootDistance: 16
   hitLayers:
     serializedVersion: 2
     m_Bits: 64
   gun: {fileID: 2186429720992836567}
-  magazineSize: 10
+  magazineSize: 15
   totalAmmo: 30
   reloadTime: 2
 --- !u!114 &361021797006092052
@@ -203,20 +206,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentHealth: 100
   maxHealth: 100
---- !u!114 &5758357855973522976
-MonoBehaviour:
+--- !u!95 &2343899725561416662
+Animator:
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 573521620945052182}
   m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1ab89629d6e4abd439100ee4f94fb0d2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  player: {fileID: 573521620945052182}
-  respawnPoint: {fileID: 0}
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 0696cb33a4adf3f42849158e36bdd61a, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &2186429720992836567
 GameObject:
   m_ObjectHideFlags: 0
@@ -227,8 +237,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6056608301415076835}
   - component: {fileID: 964168715521283326}
-  m_Layer: 0
-  m_Name: Square
+  m_Layer: 8
+  m_Name: PlayerGun
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -242,13 +252,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2186429720992836567}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0.999766, w: 0.021631746}
-  m_LocalPosition: {x: -0.124, y: -0.473, z: 0}
+  m_LocalRotation: {x: 0, y: -0, z: -0.021633333, w: -0.999766}
+  m_LocalPosition: {x: 0.1269973, y: 0.4520019, z: 0}
   m_LocalScale: {x: 0.052357562, y: 0.019447325, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3106288413251525836}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 47.479}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 2.479}
 --- !u!212 &964168715521283326
 SpriteRenderer:
   m_ObjectHideFlags: 0
