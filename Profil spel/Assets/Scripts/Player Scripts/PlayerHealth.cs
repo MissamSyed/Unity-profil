@@ -50,6 +50,8 @@ public class PlayerHealth : MonoBehaviour
             Scene currentScene = SceneManager.GetActiveScene();
             SceneManager.LoadScene(currentScene.name); // Reload the current scene
         }
+
+        currentHealth = 100;
     }
 
     // Heal the player by 33% of their max health

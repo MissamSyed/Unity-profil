@@ -7,9 +7,10 @@ public class Spawner : MonoBehaviour
     [SerializeField] GameObject enemyPrefab;
     [SerializeField] float minSpawnTime = 1f;
     [SerializeField] float maxSpawnTime = 2f;
-    [SerializeField] float spawnDistanceMin = 0f;
-    [SerializeField] float spawnDistanceMax = 5f;
+    [SerializeField] float spawnDistanceMin = 1f;  // Minimum distance from the screen edge
+    [SerializeField] float spawnDistanceMax = 5f;  // Maximum distance from the screen edge
     [SerializeField] float initialDelay = 1f;
+
     private Vector2 screenBounds;
     private GameObject player;
 
@@ -17,20 +18,22 @@ public class Spawner : MonoBehaviour
     {
         player = GameObject.FindWithTag("Player");
 
-        screenBounds = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height));  // Get the camera bounds to get the spawn locations
+        // Calculate screen bounds for 2D (assuming the camera is orthographic)
+        Camera camera = Camera.main;
+        screenBounds = new Vector2(camera.orthographicSize * camera.aspect, camera.orthographicSize);
 
-        // Start the spawning 
+        // Start spawning enemies after the initial delay
         StartCoroutine(SpawnEnemyCoroutine());
     }
 
     IEnumerator SpawnEnemyCoroutine()
     {
-        // Wait for the initial delay before the first spawn so it doesn't spawn directly when the game starts
+        // Wait for the initial delay before the first spawn
         yield return new WaitForSeconds(initialDelay);
 
         while (true)
         {
-            // Set spawn position and spawn enemy
+            // Get a random spawn position
             Vector2 spawnPosition = GetRandomSpawnPosition();
             GameObject enemy = Instantiate(enemyPrefab, spawnPosition, Quaternion.identity);  // Spawn the enemy prefab
 
@@ -51,23 +54,26 @@ public class Spawner : MonoBehaviour
 
     Vector2 GetRandomSpawnPosition()
     {
-        // Randomize spawn position around the screen bounds
+        // Randomly choose a side (top, bottom, left, right)
         int side = Random.Range(0, 4);
+
+        // Randomly pick spawn distance within the given range
         float spawnDistance = Random.Range(spawnDistanceMin, spawnDistanceMax);
+
         Vector2 spawnPosition = Vector2.zero;
 
         switch (side)
         {
-            case 0:  // Top
+            case 0:  // Top side
                 spawnPosition = new Vector2(Random.Range(-screenBounds.x, screenBounds.x), screenBounds.y + spawnDistance);
                 break;
-            case 1:  // Bottom
+            case 1:  // Bottom side
                 spawnPosition = new Vector2(Random.Range(-screenBounds.x, screenBounds.x), -screenBounds.y - spawnDistance);
                 break;
-            case 2:  // Right
+            case 2:  // Right side
                 spawnPosition = new Vector2(screenBounds.x + spawnDistance, Random.Range(-screenBounds.y, screenBounds.y));
                 break;
-            case 3:  // Left
+            case 3:  // Left side
                 spawnPosition = new Vector2(-screenBounds.x - spawnDistance, Random.Range(-screenBounds.y, screenBounds.y));
                 break;
         }

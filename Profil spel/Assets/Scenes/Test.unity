@@ -205,7 +205,7 @@ Transform:
   m_GameObject: {fileID: 448973255}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -26.87, y: 0, z: 0}
+  m_LocalPosition: {x: -26.989, y: -0.005, z: 0}
   m_LocalScale: {x: 0.46378, y: 0.46378, z: 0.46378}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -316,8 +316,8 @@ MonoBehaviour:
   enemyPrefab: {fileID: 2315760087458374145, guid: 5bbd91def4abf7249bb725c8a2d786b9, type: 3}
   minSpawnTime: 6
   maxSpawnTime: 12
-  spawnDistanceMin: 6
-  spawnDistanceMax: 11
+  spawnDistanceMin: 8
+  spawnDistanceMax: 18
   initialDelay: 3
 --- !u!4 &605976996
 Transform:
@@ -1348,6 +1348,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 787501676919040195, guid: 83d5a367ba0e5a24fa0badb0c9b140b3, type: 3}
       propertyPath: m_FlipY
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 787501676919040195, guid: 83d5a367ba0e5a24fa0badb0c9b140b3, type: 3}
+      propertyPath: m_SortingOrder
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 787501676919040195, guid: 83d5a367ba0e5a24fa0badb0c9b140b3, type: 3}
