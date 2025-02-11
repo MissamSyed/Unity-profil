@@ -346,6 +346,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b48b8bc047ba4e4698557f53a843873, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  healingPrefab: {fileID: 3914706278491900973, guid: 985dc5ae83def324d88825053312e020, type: 3}
+  ammoboxPrefab: {fileID: 317782138662325868, guid: d72fc5d33c77a52458a20210684f8dc5, type: 3}
+  minSpawnTime: 20
+  maxSpawnTime: 30
+  spawnDistanceMin: 1
+  spawnDistanceMax: 5
+  initialDelay: 10
 --- !u!1 &793150615
 GameObject:
   m_ObjectHideFlags: 0
@@ -1032,18 +1039,6 @@ PrefabInstance:
       value: AmmoBox (1)
       objectReference: {fileID: 0}
     - target: {fileID: 2275312235244251228, guid: d72fc5d33c77a52458a20210684f8dc5, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1.7081021
-      objectReference: {fileID: 0}
-    - target: {fileID: 2275312235244251228, guid: d72fc5d33c77a52458a20210684f8dc5, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1.7081021
-      objectReference: {fileID: 0}
-    - target: {fileID: 2275312235244251228, guid: d72fc5d33c77a52458a20210684f8dc5, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 1.7081021
-      objectReference: {fileID: 0}
-    - target: {fileID: 2275312235244251228, guid: d72fc5d33c77a52458a20210684f8dc5, type: 3}
       propertyPath: m_LocalPosition.x
       value: -15.58
       objectReference: {fileID: 0}
@@ -1366,9 +1361,17 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 496881620222815075, guid: 83d5a367ba0e5a24fa0badb0c9b140b3, type: 3}
+      propertyPath: totalAmmo
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 496881620222815075, guid: 83d5a367ba0e5a24fa0badb0c9b140b3, type: 3}
       propertyPath: casingPrefab
       value: 
       objectReference: {fileID: 1534405568027328810, guid: 3e3172b5f8712c547ae95c87d38ea92f, type: 3}
+    - target: {fileID: 496881620222815075, guid: 83d5a367ba0e5a24fa0badb0c9b140b3, type: 3}
+      propertyPath: magazineSize
+      value: 30
+      objectReference: {fileID: 0}
     - target: {fileID: 496881620222815075, guid: 83d5a367ba0e5a24fa0badb0c9b140b3, type: 3}
       propertyPath: casingSpawnPoint
       value: 
@@ -1377,6 +1380,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 787501676919040195, guid: 83d5a367ba0e5a24fa0badb0c9b140b3, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 002e3484fbd586848a570bab99264267, type: 3}
     - target: {fileID: 3106288413251525836, guid: 83d5a367ba0e5a24fa0badb0c9b140b3, type: 3}
       propertyPath: m_LocalPosition.x
       value: -27.01
@@ -1417,6 +1424,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 360.352
       objectReference: {fileID: 0}
+    - target: {fileID: 8343824193349687261, guid: 83d5a367ba0e5a24fa0badb0c9b140b3, type: 3}
+      propertyPath: recoilAmount
+      value: 20
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -1436,18 +1447,6 @@ PrefabInstance:
     - target: {fileID: 317782138662325868, guid: d72fc5d33c77a52458a20210684f8dc5, type: 3}
       propertyPath: m_Name
       value: AmmoBox
-      objectReference: {fileID: 0}
-    - target: {fileID: 2275312235244251228, guid: d72fc5d33c77a52458a20210684f8dc5, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1.7568812
-      objectReference: {fileID: 0}
-    - target: {fileID: 2275312235244251228, guid: d72fc5d33c77a52458a20210684f8dc5, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1.7568812
-      objectReference: {fileID: 0}
-    - target: {fileID: 2275312235244251228, guid: d72fc5d33c77a52458a20210684f8dc5, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 1.7568812
       objectReference: {fileID: 0}
     - target: {fileID: 2275312235244251228, guid: d72fc5d33c77a52458a20210684f8dc5, type: 3}
       propertyPath: m_LocalPosition.x
