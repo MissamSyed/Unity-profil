@@ -5,23 +5,23 @@ using UnityEngine.SceneManagement;
 
 public class PlayerHealth : MonoBehaviour
 {
-    public int currentHealth = 100;  
+    public int currentPlayerHealth = 100;  
     public int maxHealth = 100;
     
 
     //Take damage system
     public void TakeDamage(int damageAmount)
     {
-        currentHealth -= damageAmount; //Reduce health by the damage amount
+        currentPlayerHealth -= damageAmount; //Reduce health by the damage amount
 
         //Check if health reaches 0 or below die if it is 0 or below
-        if (currentHealth <= 0)
+        if (currentPlayerHealth <= 0)
         {
-            currentHealth = 0;
+            currentPlayerHealth = 0;
             Respawn(); 
         }
 
-        Debug.Log("Player's current health: " + currentHealth);
+        Debug.Log("Player's current health: " + currentPlayerHealth);
     }
 
     private void OnTriggerEnter2D(Collider2D other)

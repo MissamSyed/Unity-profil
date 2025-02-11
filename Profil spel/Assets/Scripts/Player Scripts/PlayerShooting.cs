@@ -100,7 +100,7 @@ public class PlayerShooting : MonoBehaviour
                 Enemy enemy = hit.collider.GetComponent<Enemy>();
                 if (enemy != null)
                 {
-                    enemy.TakeDamage(35); //Damage to enemy
+                    enemy.TakeDamage(50); //Damage to enemy
                 }
             }
         }
