@@ -1,90 +1,59 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
-    [SerializeField] float moveSpeed = 5f;
-    public Camera mainCamera;
-    public float stoppingDistance = 1f; 
+    public float moveSpeed = 5f;
+    public float smoothTime = 0.1f;
+    private Vector2 currentVelocity;
 
     private Rigidbody2D rb;
-    private Vector2 movement;
-    private Transform enemy; 
+    public float rotationSpeed = 10f;  
 
     void Start()
-
     {
-        
         rb = GetComponent<Rigidbody2D>();
-        rb.interpolation = RigidbodyInterpolation2D.Interpolate; //Smoother movement
 
-        
-        GameObject enemyObject = GameObject.FindGameObjectWithTag("Enemy");
-        if (enemyObject != null)
-        {
-            enemy = enemyObject.transform; 
-        }
-        else
-        {
-            Debug.LogWarning("No object with the 'Enemy' tag found in the scene.");
-        }
+        //90 degrees roation to point in the right direction
+        transform.rotation = Quaternion.Euler(0, 0, 90);
     }
 
     void Update()
     {
-        // Get the mouse position in world space
-        Vector3 mousePos = mainCamera.ScreenToWorldPoint(Input.mousePosition);
-        mousePos.z = transform.position.z; 
+        //Input for movement
+        Vector2 input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized;
 
-        // Calculate direction from player to mouse position
-        Vector2 lookDir = (mousePos - transform.position).normalized;
+       //Smooth movement
+        Vector2 targetVelocity = input * moveSpeed;
+        rb.velocity = Vector2.SmoothDamp(rb.velocity, targetVelocity, ref currentVelocity, smoothTime);
 
-        // Calculate the angle to rotate (adjust for a downward-facing sprite)
-        float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg;
-
-        //Add 90 for a downward-facing sprite because of the cursor missplace
-        transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle + 90)); 
+        
     }
 
     void FixedUpdate()
     {
-        //Get input for movement (Horizontal and Vertical axes)
-        movement.x = Input.GetAxis("Horizontal");
-        movement.y = Input.GetAxis("Vertical");
-
-       
-        if (enemy != null)
-        {
-            float distanceToEnemy = Vector2.Distance(transform.position, enemy.position);
-
-            if (distanceToEnemy > stoppingDistance)
-            {
-                
-                rb.velocity = movement * moveSpeed;
-            }
-            else
-            {
-                //Direction to stop near the enemy
-                Vector2 directionToEnemy = (enemy.position - transform.position).normalized;
-                Vector2 perpendicularDirection = new Vector2(-directionToEnemy.y, directionToEnemy.x); 
-
-                //Stop movement in enemy direction
-                float dotProduct = Vector2.Dot(movement, directionToEnemy);
-                if (dotProduct > 0)
-                {
-                    movement = perpendicularDirection * movement.magnitude;
-                }
-
-                rb.velocity = movement * moveSpeed;
-            }
-        }
-        else
-        {
-            //If no enemy exists, apply normal movement 
-            rb.velocity = movement * moveSpeed;
-        }
+        //Rotate the player to face the cursor in FixedUpdate for smooth physics 
+        RotatePlayerToCursor();
     }
 
+    void RotatePlayerToCursor()
+    {
+        //Get the mouse position in world space
+        Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        mousePosition.z = 0; 
+
+        //Get the direction from the player to the mouse
+        Vector2 direction = (mousePosition - transform.position).normalized;
+
+        //Calculate the angle from the direction and convert it to degrees
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+
+       
+        angle -= 90f;  
+
+        //Smoothly rotate the player to the target angle
+        Quaternion targetRotation = Quaternion.Euler(0, 0, angle);
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+    }
 }
