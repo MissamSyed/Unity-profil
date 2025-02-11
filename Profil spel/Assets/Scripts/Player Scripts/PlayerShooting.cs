@@ -183,7 +183,7 @@ public class PlayerShooting : MonoBehaviour
 
     IEnumerator StopReloadingAnimation()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.1f);
         animator.SetBool("IsReloading", false); //Stop reloading animation
     }
 
