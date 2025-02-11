@@ -5,18 +5,23 @@ using UnityEngine.InputSystem;
 
 public class PlayerShooting : MonoBehaviour
 {
-    [SerializeField] private Animator animator;  
+    [SerializeField] private Animator animator;
     [SerializeField] private string shootAnimationTrigger = "Shoot";
     [SerializeField] private string reloadAnimationTrigger = "Reload";
 
-    [SerializeField] float fireRate = 0.1f; 
-    [SerializeField] float maxShootDistance = 10f; 
-    [SerializeField] LayerMask hitLayers; 
-    [SerializeField] GameObject gun; 
+    [SerializeField] float fireRate = 0.1f;
+    [SerializeField] float maxShootDistance = 10f;
+    [SerializeField] LayerMask hitLayers;
+    [SerializeField] GameObject gun;
 
-    [SerializeField] int magazineSize = 10; 
-    [SerializeField] int totalAmmo = 30; 
-    [SerializeField] float reloadTime = 1.5f; 
+    [SerializeField] int magazineSize = 10;
+    [SerializeField] int totalAmmo = 30;
+    [SerializeField] float reloadTime = 1.5f;
+
+    // Bullet Casing Related Fields
+    [SerializeField] private GameObject casingPrefab;  // Bullet casing particle system prefab
+    [SerializeField] private Transform casingSpawnPoint;  // Where the casing will spawn (near gun barrel)
+    [SerializeField] private float casingEjectionForce = 5f; // Force applied to casing ejection
 
     private int currentAmmo;
     private float nextFireTime = 0f;
@@ -78,8 +83,8 @@ public class PlayerShooting : MonoBehaviour
         currentAmmo--; //Reduce ammo from the mag
 
         //Trigger shooting animation and set IsShooting to true to start it
-        animator.SetTrigger(shootAnimationTrigger); 
-        animator.SetBool("IsShooting", true); 
+        animator.SetTrigger(shootAnimationTrigger);
+        animator.SetBool("IsShooting", true);
 
         //Raycasting system (Hit and scan method)
         Vector2 gunPosition = gun.transform.position;
@@ -107,18 +112,36 @@ public class PlayerShooting : MonoBehaviour
 
         StartCoroutine(ShowDebugRay(gunPosition, endPoint));
 
-       
-        StartCoroutine(StopShootingAnimation());  
+        // Emit the casing after shooting
+        EmitCasing();
+
+        StartCoroutine(StopShootingAnimation());
     }
 
-   
+    // Emit the casing when the player shoots
+    private void EmitCasing()
+    {
+        if (casingPrefab != null && casingSpawnPoint != null)
+        {
+            // Instantiate the casing particle system at the spawn point
+            GameObject casing = Instantiate(casingPrefab, casingSpawnPoint.position, casingSpawnPoint.rotation);
+
+            // Add force to the casing to simulate ejection
+            Rigidbody2D rb = casing.GetComponent<Rigidbody2D>();
+            if (rb != null)
+            {
+                // Randomize the direction a bit to make it feel more natural
+                Vector2 ejectDirection = new Vector2(Random.Range(-1f, 1f), Random.Range(0.5f, 1f)).normalized;
+                rb.AddForce(ejectDirection * casingEjectionForce, ForceMode2D.Impulse);
+            }
+        }
+    }
+
     IEnumerator StopShootingAnimation()
     {
-        
-        yield return new WaitForSeconds(0.25f); 
-        animator.SetBool("IsShooting", false); //Set IsShooting to false to stop the animation
+        yield return new WaitForSeconds(0.25f);
+        animator.SetBool("IsShooting", false); //Stop shooting animation
     }
-
 
     //Debug Hit and scan system
     IEnumerator ShowDebugRay(Vector2 start, Vector2 end)
@@ -133,7 +156,6 @@ public class PlayerShooting : MonoBehaviour
     {
         animator.SetTrigger(reloadAnimationTrigger);
         animator.SetBool("IsReloading", true);
-
 
         if (totalAmmo > 0 && currentAmmo < magazineSize)
         {
@@ -161,23 +183,21 @@ public class PlayerShooting : MonoBehaviour
 
     IEnumerator StopReloadingAnimation()
     {
-
         yield return new WaitForSeconds(1f);
-        animator.SetBool("IsReloading", false); //Set IsShooting to false to stop the animation
+        animator.SetBool("IsReloading", false); //Stop reloading animation
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("AmmoBox"))
         {
-            int ammoNeeded = 30 - totalAmmo; 
-            int refillAmount = Mathf.Max(0, ammoNeeded); //Checks so it doesnt go above 30
+            int ammoNeeded = 30 - totalAmmo;
+            int refillAmount = Mathf.Max(0, ammoNeeded); //Checks so it doesn't go above 30
 
-            totalAmmo += refillAmount; 
+            totalAmmo += refillAmount;
             Destroy(other.gameObject); //Destroy the ammo box after touching the player
 
             Debug.Log("Picked up AmmoBox! Total Ammo: " + totalAmmo);
         }
     }
-
 }
