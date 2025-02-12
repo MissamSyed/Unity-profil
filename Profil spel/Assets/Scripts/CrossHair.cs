@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class CrossHair : MonoBehaviour
@@ -5,7 +7,11 @@ public class CrossHair : MonoBehaviour
     public GameObject innerCrosshair;  // Reference to the inner crosshair GameObject
     public GameObject outerCrosshair;  // Reference to the outer crosshair GameObject
     public float innerOffset = 0f;     // Offset for the inner crosshair (if needed)
-    public float outerOffset = 1f;     // Offset for the outer crosshair (if needed)
+    public float outerOffset = 0f;     // Offset for the outer crosshair (if needed)
+    public float smoothTime = 0.1f;    // Smooth damping time for crosshair movement
+
+    private Vector2 innerVelocity = Vector2.zero;
+    private Vector2 outerVelocity = Vector2.zero;
 
     void Start()
     {
@@ -16,18 +22,17 @@ public class CrossHair : MonoBehaviour
     void Update()
     {
         // Get the mouse position in screen space
-        Vector3 mousePosition = Input.mousePosition;
+        Vector2 mousePosition = Input.mousePosition;
 
-        // Convert mouse position to world space
+        // Convert mouse position to world space (in 2D coordinates)
         mousePosition = Camera.main.ScreenToWorldPoint(mousePosition);
 
-        // Ensure the Z position is set to 0 to stay in the 2D plane
-        mousePosition.z = 0;
+        // Smoothly move the inner crosshair to the mouse position
+        Vector2 innerTargetPosition = mousePosition + new Vector2(innerOffset, innerOffset);
+        innerCrosshair.transform.position = Vector2.SmoothDamp(innerCrosshair.transform.position, innerTargetPosition, ref innerVelocity, smoothTime);
 
-        // Position the inner crosshair slightly offset from the mouse position (if needed)
-        innerCrosshair.transform.position = mousePosition + new Vector3(innerOffset, innerOffset, 0);
-
-        // Position the outer crosshair with a different offset (if needed)
-        outerCrosshair.transform.position = mousePosition + new Vector3(outerOffset, outerOffset, 0);
+        // Smoothly move the outer crosshair to the mouse position
+        Vector2 outerTargetPosition = mousePosition + new Vector2(outerOffset, outerOffset);
+        outerCrosshair.transform.position = Vector2.SmoothDamp(outerCrosshair.transform.position, outerTargetPosition, ref outerVelocity, smoothTime);
     }
 }
