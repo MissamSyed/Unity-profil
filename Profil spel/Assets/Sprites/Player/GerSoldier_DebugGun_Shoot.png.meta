@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: f9607c5630936bb4aadc049abd314836
+guid: c9e93463d3676504b859853e8c4dd4bd
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -103,7 +103,7 @@ TextureImporter:
         x: 0
         y: 0
         width: 32
-        height: 48
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -111,8 +111,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: fdfbcd039b711034091ce78dcc283845
-      internalID: -1241590906
+      spriteID: aadbf7df1dc9eeb469d8ba648bfcb527
+      internalID: 361827829
       vertices: []
       indices: 
       edges: []
@@ -124,7 +124,7 @@ TextureImporter:
         x: 32
         y: 0
         width: 32
-        height: 48
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -132,8 +132,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 336c784b0dda6a04185cae6fef973c71
-      internalID: 1843899564
+      spriteID: b67c69e00782b6b4d8d04ceef073e3d4
+      internalID: -297045367
       vertices: []
       indices: 
       edges: []
@@ -149,8 +149,8 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      GerSoldier_DebugGun_Shoot_0: -1241590906
-      GerSoldier_DebugGun_Shoot_1: 1843899564
+      GerSoldier_DebugGun_Shoot_0: 361827829
+      GerSoldier_DebugGun_Shoot_1: -297045367
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

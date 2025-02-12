@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -38,11 +39,16 @@ public class CheckPoint : MonoBehaviour
     private void OnTriggerExit2D(Collider2D collision)
     {
         // Stop capturing if the player exits the trigger area
-        if (collision.CompareTag("Player") && !isCaptured && isCapturing)
+        if (collision.CompareTag("Player"))
         {
             playerInTrigger = false;
-            StopCoroutine(CaptureCheckpoint());
-            Debug.Log("Capture process canceled: Player left the area.");
+            // If the player leaves the area during capture, stop the capture process
+            if (isCapturing)
+            {
+                StopCoroutine(CaptureCheckpoint());
+                isCapturing = false; // Reset isCapturing so we can capture again
+                Debug.Log("Capture process canceled: Player left the area.");
+            }
         }
     }
 
