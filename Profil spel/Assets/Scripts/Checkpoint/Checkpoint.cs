@@ -6,24 +6,20 @@ using UnityEngine.SceneManagement;
 public class CheckPoint : MonoBehaviour
 {
     [SerializeField] private float captureTime = 20f;  // Time to capture the checkpoint
-    [SerializeField] private GameObject finalCheckpoint; // Final checkpoint object
     [SerializeField] private int checkpointIndex; // Unique index for each checkpoint
     private bool isCaptured = false;  // Whether the checkpoint is captured
     private bool isCapturing = false;  // Whether the player is currently capturing this checkpoint
     private static Transform lastCheckpointPosition;  // Last checkpoint position for respawn
     private bool playerInTrigger = false; // Whether the player is in the checkpoint trigger area
     private static int capturedCheckpoints = 0; // Track the number of captured checkpoints
+    private static int totalCheckpoints = 3; // Total number of checkpoints in the level (adjust if needed)
 
     // Property to access the last checkpoint position
     public static Transform LastCheckpointPosition => lastCheckpointPosition;
 
     void Start()
     {
-        // Make the final checkpoint inactive initially
-        if (finalCheckpoint != null)
-        {
-            finalCheckpoint.SetActive(false); // Ensure it's hidden initially
-        }
+        // You can initialize other elements if needed
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -59,7 +55,8 @@ public class CheckPoint : MonoBehaviour
 
         float captureProgress = 0f;
 
-        while (captureProgress < captureTime && playerInTrigger)  // Continue if the player is still in the area
+        // Continue if the player is still in the area
+        while (captureProgress < captureTime && playerInTrigger)
         {
             captureProgress += Time.deltaTime;
             yield return null;
@@ -86,14 +83,10 @@ public class CheckPoint : MonoBehaviour
         // Increment captured checkpoints
         capturedCheckpoints++;
 
-        // Check if all 3 checkpoints are captured
-        if (capturedCheckpoints >= 3 && finalCheckpoint != null)
+        // After capturing, check if all checkpoints are captured
+        if (capturedCheckpoints >= totalCheckpoints)
         {
-            // Activate the final checkpoint (make it visible and accessible)
-            finalCheckpoint.SetActive(true);
-            Debug.Log("Final checkpoint is now active!");
-
-            // Transition to the next level if this is the last checkpoint
+            // Transition to the next level as soon as all checkpoints are captured
             TransitionToNextLevel();
         }
 
@@ -103,6 +96,7 @@ public class CheckPoint : MonoBehaviour
 
     private void TransitionToNextLevel()
     {
+        // This assumes your scenes are ordered correctly in the build settings.
         int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
         SceneManager.LoadScene(currentSceneIndex + 1);
     }
