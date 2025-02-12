@@ -24,7 +24,7 @@ public class HUD : MonoBehaviour
 
     void Start()
     {
-        //SetAmoCount(24);
+        SetAmoCount(30);
     }
 
     public void SetAmoCount(int count)
