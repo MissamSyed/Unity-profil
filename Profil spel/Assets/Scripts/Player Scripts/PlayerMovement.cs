@@ -7,7 +7,6 @@ public class PlayerMovement : MonoBehaviour
     public float moveSpeed = 5f;
     public float smoothTime = 0.1f;
     private Vector2 currentVelocity;
-
     private Rigidbody2D rb;
     public float rotationSpeed = 10f;
 
