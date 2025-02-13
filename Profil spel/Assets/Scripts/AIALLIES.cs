@@ -44,6 +44,8 @@ public class AIALLIES : MonoBehaviour
     {
         if (playerHealth == null) return;
 
+        DetectEnemies();  // Ensure enemies are detected
+
         switch (currentState)
         {
             case State.FollowPlayer:
@@ -72,11 +74,17 @@ public class AIALLIES : MonoBehaviour
 
         if (animator != null)
             animator.SetBool("isWalking", true);
+
+        Debug.Log("AI is following the player.");
     }
 
     void AttackEnemy()
     {
-        if (currentEnemy == null) return;
+        if (currentEnemy == null)
+        {
+            Debug.Log("No current enemy to attack.");
+            return;
+        }
 
         Vector2 direction = (currentEnemy.transform.position - transform.position).normalized;
         rb.velocity = direction * moveSpeed;
@@ -84,13 +92,15 @@ public class AIALLIES : MonoBehaviour
         if (animator != null)
             animator.SetTrigger("attack");
 
+        // Check if the AI is within attack range and cooldown has passed
         if (Vector2.Distance(transform.position, currentEnemy.transform.position) < attackRange && attackTimer <= 0)
         {
+            Debug.Log("In attack range and ready to shoot!");
             Shoot();  // AI now shoots!
-            attackTimer = attackCooldown;
+            attackTimer = attackCooldown;  // Reset cooldown
         }
 
-        attackTimer -= Time.deltaTime;
+        attackTimer -= Time.deltaTime;  // Countdown the attack timer
     }
 
     void DefendPlayer()
@@ -102,6 +112,8 @@ public class AIALLIES : MonoBehaviour
 
         if (animator != null)
             animator.SetBool("isWalking", true);
+
+        Debug.Log("AI is defending the player.");
     }
 
     void HealPlayer()
@@ -116,6 +128,8 @@ public class AIALLIES : MonoBehaviour
 
             if (animator != null)
                 animator.SetTrigger("heal");
+
+            Debug.Log("AI is healing the player.");
         }
     }
 
@@ -128,7 +142,8 @@ public class AIALLIES : MonoBehaviour
             if (enemy != null)
             {
                 currentEnemy = enemy;
-                currentState = State.AttackEnemy;
+                currentState = State.AttackEnemy;  // Switch to attack state
+                Debug.Log("Enemy detected. Switching to AttackEnemy state.");
                 break;
             }
         }
@@ -141,25 +156,34 @@ public class AIALLIES : MonoBehaviour
         if (playerHealth.currentPlayerHealth < healThreshold)
         {
             currentState = State.HealPlayer;
+            Debug.Log("Player health is low. Switching to HealPlayer state.");
         }
         else if (Vector2.Distance(transform.position, player.position) < defendRange)
         {
             currentState = State.DefendPlayer;
+            Debug.Log("AI is in defend range. Switching to DefendPlayer state.");
         }
         else
         {
             currentState = State.FollowPlayer;
+            Debug.Log("AI is in follow mode. Switching to FollowPlayer state.");
         }
     }
 
     void Shoot()
     {
-        if (currentEnemy == null || firePoint == null) return;
+        if (currentEnemy == null || firePoint == null)
+        {
+            Debug.Log("No enemy or firePoint not assigned.");
+            return;
+        }
 
         Vector2 firePosition = firePoint.position;
         Vector2 enemyPosition = currentEnemy.transform.position;
         Vector2 direction = (enemyPosition - firePosition).normalized;
         float maxShootDistance = 10f;
+
+        Debug.Log("Shooting at enemy. FirePoint: " + firePosition + ", Enemy Position: " + enemyPosition);
 
         RaycastHit2D hit = Physics2D.Raycast(firePosition, direction, maxShootDistance, LayerMask.GetMask("Enemy"));
 
@@ -170,8 +194,12 @@ public class AIALLIES : MonoBehaviour
             Enemy enemy = hit.collider.GetComponent<Enemy>();
             if (enemy != null)
             {
-                enemy.TakeDamage(10); // Damage to enemy
+                enemy.TakeDamage(50); // Damage to enemy
             }
+        }
+        else
+        {
+            Debug.Log("No hit. Raycast didn't detect an enemy.");
         }
 
         Debug.DrawRay(firePosition, direction * maxShootDistance, Color.red, 0.1f); // Debug line
