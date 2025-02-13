@@ -22,10 +22,13 @@ public class PlayerShooting : MonoBehaviour
     [SerializeField] private Transform casingSpawnPoint;  // Where the casing will spawn (near gun barrel)
     [SerializeField] private float casingEjectionForce = 5f; // Force applied to casing ejection
 
+    // Add reference to CrossHair script
+    [SerializeField] private CrossHair crosshair; // Reference to the CrossHair script
+
     private int currentAmmo;
     private float nextFireTime = 0f;
     private bool isReloading = false;
-    private bool isAutomatic = false; //Fire mode: false = Semi, true = Auto
+    private bool isAutomatic = false; // Fire mode: false = Semi, true = Auto
 
     private HUD hud; // Reference to the HUD script
 
@@ -52,7 +55,6 @@ public class PlayerShooting : MonoBehaviour
         }
 
         currentAmmo = magazineSize; // Start with a full magazine
-        
     }
 
     void Update()
@@ -142,6 +144,12 @@ public class PlayerShooting : MonoBehaviour
 
         // Emit the casing after shooting
         EmitCasing();
+
+        // Call ApplyRecoil on the CrossHair script
+        if (crosshair != null)
+        {
+            crosshair.ApplyRecoil(); // Apply recoil to inner crosshair and rotate player
+        }
 
         StartCoroutine(StopShootingAnimation());
     }
@@ -233,5 +241,4 @@ public class PlayerShooting : MonoBehaviour
             Debug.Log("Picked up AmmoBox! Total Ammo: " + totalAmmo);
         }
     }
-
 }

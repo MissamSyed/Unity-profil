@@ -10,16 +10,19 @@ public class PlayerMovement : MonoBehaviour
     private Rigidbody2D rb;
     public float rotationSpeed = 10f;
 
-    // Recoil variables
-    public float recoilAmount = 0f;  // Amount of recoil applied to the rotation
-    public float recoilRecoverySpeed = 30f;  // Speed at which the recoil wears off
+    private float currentRotation = 0f;
+    private float targetRotation = 0f;  // Target rotation considering recoil
+    private float maxRecoilRotation = 10f; // Max recoil rotation (degrees)
+    private float recoilRotationFactor = 0.6f; // Fraction of recoil applied
+    private float recoilDampingSpeed = 3f;  // How fast recoil settles back to normal
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
 
-        // 90 degrees rotation to point in the right direction
+        // Initial player rotation
         transform.rotation = Quaternion.Euler(0, 0, 90);
+        targetRotation = transform.rotation.eulerAngles.z;
     }
 
     void Update()
@@ -30,17 +33,11 @@ public class PlayerMovement : MonoBehaviour
         // Smooth movement
         Vector2 targetVelocity = input * moveSpeed;
         rb.velocity = Vector2.SmoothDamp(rb.velocity, targetVelocity, ref currentVelocity, smoothTime);
-
-        // Apply recoil over time
-        if (recoilAmount != 0f)
-        {
-            recoilAmount = Mathf.Lerp(recoilAmount, 0f, recoilRecoverySpeed * Time.deltaTime);
-        }
     }
 
     void FixedUpdate()
     {
-        // Rotate the player to face the cursor and apply recoil
+        // Rotate the player to face the cursor
         RotatePlayerToCursor();
     }
 
@@ -58,18 +55,27 @@ public class PlayerMovement : MonoBehaviour
 
         angle -= 90f;  // Adjust for sprite's initial facing direction
 
-        // Apply recoil by modifying the target angle
-        angle += recoilAmount;
-
-        // Smoothly rotate the player to the target angle
-        Quaternion targetRotation = Quaternion.Euler(0, 0, angle);
-        transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+        // Smoothly rotate the player to the target angle considering recoil
+        targetRotation = Mathf.LerpAngle(targetRotation, angle, rotationSpeed * Time.deltaTime);
+        transform.rotation = Quaternion.Euler(0, 0, targetRotation);
     }
 
-    // Method to apply recoil when firing
-    public void ApplyRecoil()
+    // Apply recoil rotation to the player smoothly
+    public void ApplyRecoilRotation(Vector2 recoilOffset)
     {
-        // Apply a recoil of 5 degrees when shooting (you can change this value)
-        recoilAmount = 5f;
+        // Calculate the recoil angle based on the recoil offset
+        float recoilAngle = Mathf.Atan2(recoilOffset.y, recoilOffset.x) * Mathf.Rad2Deg;
+
+        // Clamp recoil angle to avoid extreme rotations
+        recoilAngle = Mathf.Clamp(recoilAngle, -maxRecoilRotation, maxRecoilRotation);
+
+        // Apply a fraction of the recoil angle to the player's rotation
+        float recoilAdjustment = recoilAngle * recoilRotationFactor;
+
+        // Apply recoil gradually (smooth it out)
+        targetRotation += recoilAdjustment;
+
+        // Smoothly return the target rotation back to the normal aiming rotation (using LerpAngle)
+        targetRotation = Mathf.LerpAngle(targetRotation, transform.rotation.eulerAngles.z, recoilDampingSpeed * Time.deltaTime);
     }
 }
