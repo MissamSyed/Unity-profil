@@ -13,11 +13,11 @@ public class ItemSpawn : MonoBehaviour
     [SerializeField] float initialDelay = 1f;
 
     private Vector2 screenBounds;
-    private GameObject player;
+    
 
     void Start()
     {
-        player = GameObject.FindWithTag("Player");
+       
 
         // Calculate screen bounds for 2D (assuming the camera is orthographic)
         Camera camera = Camera.main;

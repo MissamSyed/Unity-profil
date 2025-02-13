@@ -24,13 +24,16 @@ public class CrossHair : MonoBehaviour
 
     private Transform playerTransform;  // Reference to the player transform for rotation
 
+    // A new reference for the player object
+    public PlayerMovement playerMovement;
+
     void Start()
     {
         // Hide the default system cursor (optional)
         Cursor.visible = false;
 
-        // Get the player's transform (if this script is attached to a different object)
-        playerTransform = transform;
+        // Get the player's movement script (for applying recoil rotation)
+        playerTransform = playerMovement.transform;
     }
 
     void Update()
@@ -41,8 +44,11 @@ public class CrossHair : MonoBehaviour
         // Convert mouse position to world space (in 2D coordinates)
         mousePosition = Camera.main.ScreenToWorldPoint(mousePosition);
 
-        // Smoothly move the inner crosshair to the mouse position, adding recoil offset
-        Vector2 innerTargetPosition = mousePosition + new Vector2(innerOffset, innerOffset) + innerRecoilOffset;
+        // Apply recoil to the mouse position by adjusting it with the recoil offset
+        Vector2 adjustedMousePosition = mousePosition + new Vector2(innerRecoilOffset.x, innerRecoilOffset.y);
+
+        // Smoothly move the inner crosshair to the adjusted mouse position, adding recoil offset
+        Vector2 innerTargetPosition = adjustedMousePosition + new Vector2(innerOffset, innerOffset);
         innerCrosshair.transform.position = Vector2.SmoothDamp(innerCrosshair.transform.position, innerTargetPosition, ref innerVelocity, smoothTime);
 
         // Smoothly move the outer crosshair to the mouse position (no recoil here)
@@ -56,7 +62,7 @@ public class CrossHair : MonoBehaviour
             innerRecoilOffset = Vector2.Lerp(innerRecoilOffset, Vector2.zero, Time.deltaTime * recoilRecoverySpeed);
         }
 
-        // Rotate the player according to the inner crosshair recoil
+        // Apply the recoil to both the crosshair and player rotation
         RotatePlayerWithRecoil();
     }
 
@@ -78,11 +84,8 @@ public class CrossHair : MonoBehaviour
         // Only rotate the player when there's recoil
         if (innerRecoilOffset != Vector2.zero)
         {
-            // Calculate the recoil direction (angle) from the recoil offset
-            float angle = Mathf.Atan2(innerRecoilOffset.y, innerRecoilOffset.x) * Mathf.Rad2Deg;
-
-            // Apply rotation to the player based on the recoil
-            playerTransform.rotation = Quaternion.RotateTowards(playerTransform.rotation, Quaternion.Euler(0, 0, angle), playerRotationSpeed * Time.deltaTime);
+            // Apply recoil rotation to the player
+            playerMovement.ApplyRecoilRotation(innerRecoilOffset);
         }
     }
 
