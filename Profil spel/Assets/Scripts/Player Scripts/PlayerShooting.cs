@@ -25,6 +25,10 @@ public class PlayerShooting : MonoBehaviour
     // Add reference to CrossHair script
     [SerializeField] private CrossHair crosshair; // Reference to the CrossHair script
 
+    // Tracer Effect (Particle System)
+    [SerializeField] private GameObject tracerPrefab;  // The tracer particle system prefab
+    [SerializeField] private float tracerLifetime = 0.1f; // Lifetime of the tracer effect
+
     private int currentAmmo;
     private float nextFireTime = 0f;
     private bool isReloading = false;
@@ -140,6 +144,9 @@ public class PlayerShooting : MonoBehaviour
             }
         }
 
+        // Create the tracer effect using Particle System
+        CreateTracerEffect(gunPosition, endPoint);
+
         StartCoroutine(ShowDebugRay(gunPosition, endPoint));
 
         // Emit the casing after shooting
@@ -152,6 +159,33 @@ public class PlayerShooting : MonoBehaviour
         }
 
         StartCoroutine(StopShootingAnimation());
+    }
+
+    // Create the Tracer effect with Particle System
+    private void CreateTracerEffect(Vector2 start, Vector2 end)
+    {
+        if (tracerPrefab != null)
+        {
+            // Instantiate the tracer particle system
+            GameObject tracer = Instantiate(tracerPrefab, start, Quaternion.identity);
+            ParticleSystem particleSystem = tracer.GetComponent<ParticleSystem>();
+
+            // Set the start position of the tracer (gun position)
+            var main = particleSystem.main;
+            main.startLifetime = tracerLifetime;
+            main.startSpeed = (end - start).magnitude / tracerLifetime;
+
+            // Set the particle's velocity towards the target point (hit or max distance)
+            var velocityOverLifetime = particleSystem.velocityOverLifetime;
+            velocityOverLifetime.x = (end.x - start.x) / tracerLifetime;
+            velocityOverLifetime.y = (end.y - start.y) / tracerLifetime;
+
+            // Play the particle system
+            particleSystem.Play();
+
+            // Destroy the tracer after its lifetime expires
+            Destroy(tracer, tracerLifetime);
+        }
     }
 
     private void EmitCasing()
@@ -241,5 +275,4 @@ public class PlayerShooting : MonoBehaviour
             Debug.Log("Picked up AmmoBox! Total Ammo: " + totalAmmo);
         }
     }
-
 }
