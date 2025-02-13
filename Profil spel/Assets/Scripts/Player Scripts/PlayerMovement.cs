@@ -12,9 +12,11 @@ public class PlayerMovement : MonoBehaviour
 
     private float currentRotation = 0f;
     private float targetRotation = 0f;  // Target rotation considering recoil
-    private float maxRecoilRotation = 10f; // Max recoil rotation (degrees)
+    private float maxRotationAngle = 30f; // Max recoil rotation angle (degrees)
     private float recoilRotationFactor = 0.6f; // Fraction of recoil applied
     private float recoilDampingSpeed = 3f;  // How fast recoil settles back to normal
+
+    public GameObject innerCrosshair;  // Reference to the inner crosshair GameObject
 
     void Start()
     {
@@ -37,37 +39,39 @@ public class PlayerMovement : MonoBehaviour
 
     void FixedUpdate()
     {
-        // Rotate the player to face the cursor
-        RotatePlayerToCursor();
+        // Rotate the player to face the inner crosshair
+        RotatePlayerToInnerCrosshair();
     }
 
-    void RotatePlayerToCursor()
+    // Rotate the player toward the inner crosshair
+    void RotatePlayerToInnerCrosshair()
     {
-        // Get the mouse position in world space
-        Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        mousePosition.z = 0;
+        if (innerCrosshair == null) return;
 
-        // Get the direction from the player to the mouse
-        Vector2 direction = (mousePosition - transform.position).normalized;
+        // Get the position of the inner crosshair in world space
+        Vector3 crosshairPosition = innerCrosshair.transform.position;
+
+        // Get the direction from the player to the inner crosshair
+        Vector2 direction = (crosshairPosition - transform.position).normalized;
 
         // Calculate the angle from the direction and convert it to degrees
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
 
         angle -= 90f;  // Adjust for sprite's initial facing direction
 
-        // Smoothly rotate the player to the target angle considering recoil
+        // Smoothly rotate the player to the target angle
         targetRotation = Mathf.LerpAngle(targetRotation, angle, rotationSpeed * Time.deltaTime);
         transform.rotation = Quaternion.Euler(0, 0, targetRotation);
     }
 
-    // Apply recoil rotation to the player smoothly
+    // Apply recoil rotation to the player smoothly with a limit
     public void ApplyRecoilRotation(Vector2 recoilOffset)
     {
         // Calculate the recoil angle based on the recoil offset
         float recoilAngle = Mathf.Atan2(recoilOffset.y, recoilOffset.x) * Mathf.Rad2Deg;
 
-        // Clamp recoil angle to avoid extreme rotations
-        recoilAngle = Mathf.Clamp(recoilAngle, -maxRecoilRotation, maxRecoilRotation);
+        // Clamp recoil angle to avoid extreme rotations (apply maxRotationAngle limit)
+        recoilAngle = Mathf.Clamp(recoilAngle, -maxRotationAngle, maxRotationAngle);
 
         // Apply a fraction of the recoil angle to the player's rotation
         float recoilAdjustment = recoilAngle * recoilRotationFactor;
