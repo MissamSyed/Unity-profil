@@ -8,13 +8,13 @@ public class PlayerMovement : MonoBehaviour
     public float smoothTime = 0.1f;
     private Vector2 currentVelocity;
     private Rigidbody2D rb;
-    public float rotationSpeed = 10f;
+    public float rotationSpeed = 8f;
 
     private float currentRotation = 0f;
     private float targetRotation = 0f;  // Target rotation considering recoil
-    private float maxRotationAngle = 30f; // Max recoil rotation angle (degrees)
-    private float recoilRotationFactor = 0.6f; // Fraction of recoil applied
-    private float recoilDampingSpeed = 3f;  // How fast recoil settles back to normal
+    private float maxRotationAngle = 10f; // Max recoil rotation angle (degrees)
+    private float recoilRotationFactor = 0.5f; // Fraction of recoil applied
+    private float recoilDampingSpeed = 100f;  // How fast recoil settles back to normal
 
     public GameObject innerCrosshair;  // Reference to the inner crosshair GameObject
 
