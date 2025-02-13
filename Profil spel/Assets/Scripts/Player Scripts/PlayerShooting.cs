@@ -241,4 +241,5 @@ public class PlayerShooting : MonoBehaviour
             Debug.Log("Picked up AmmoBox! Total Ammo: " + totalAmmo);
         }
     }
+
 }

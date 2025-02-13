@@ -5,7 +5,7 @@ using UnityEngine;
 public class EnemyShooting : MonoBehaviour
 {
     public Transform player;        
-    public LineRenderer lineRenderer; 
+ 
     public float fireRate = 1f;     
     public float shootingRange = 10f; 
     public int damage = 20;         
@@ -30,9 +30,7 @@ public class EnemyShooting : MonoBehaviour
         RaycastHit2D hit = Physics2D.Raycast(transform.position, direction, shootingRange);
 
         
-        lineRenderer.SetPosition(0, transform.position);
-        lineRenderer.SetPosition(1, hit.collider ? hit.point : transform.position + direction * shootingRange);
-        lineRenderer.enabled = true;
+        
 
         if (hit.collider != null && hit.collider.CompareTag("Player"))
         {
@@ -45,6 +43,6 @@ public class EnemyShooting : MonoBehaviour
 
     void HideShot()
     {
-        lineRenderer.enabled = false;
+       
     }
 }
