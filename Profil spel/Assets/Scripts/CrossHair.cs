@@ -4,27 +4,25 @@ using UnityEngine;
 
 public class CrossHair : MonoBehaviour
 {
-    public GameObject innerCrosshair;  // Reference to the inner crosshair GameObject (main one)
+    public GameObject innerCrosshair;  // Reference to the inner crosshair GameObject
     public GameObject outerCrosshair;  // Reference to the outer crosshair GameObject
-    public float innerOffset = 0f;     // Offset for the inner crosshair (if needed)
-    public float outerOffset = 0f;     // Offset for the outer crosshair (if needed)
+    public float innerOffset = 0f;     // Offset for the inner crosshair
+    public float outerOffset = 0f;     // Offset for the outer crosshair
     public float smoothTime = 0.1f;    // Smooth damping time for crosshair movement
 
     // Recoil settings
     public float recoilAmount = 10f;  // How much recoil to apply to the crosshair
     public float recoilRecoverySpeed = 5f;  // Speed at which recoil recovers
-    public float playerRotationSpeed = 10f; // Speed at which the player rotates with recoil
 
     private Vector2 innerVelocity = Vector2.zero;
     private Vector2 outerVelocity = Vector2.zero;
 
     private Vector2 innerRecoilOffset = Vector2.zero;  // Recoil offset for the inner crosshair
-
     private bool isRecoiling = false;  // To check if recoil is happening
 
     private Transform playerTransform;  // Reference to the player transform for rotation
 
-    // A new reference for the player object
+    // Reference to the player movement script
     public PlayerMovement playerMovement;
 
     void Start()
@@ -47,7 +45,7 @@ public class CrossHair : MonoBehaviour
         // Apply recoil to the mouse position by adjusting it with the recoil offset
         Vector2 adjustedMousePosition = mousePosition + new Vector2(innerRecoilOffset.x, innerRecoilOffset.y);
 
-        // Smoothly move the inner crosshair to the adjusted mouse position, adding recoil offset
+        // Smoothly move the inner crosshair to the adjusted mouse position (recoil applied here)
         Vector2 innerTargetPosition = adjustedMousePosition + new Vector2(innerOffset, innerOffset);
         innerCrosshair.transform.position = Vector2.SmoothDamp(innerCrosshair.transform.position, innerTargetPosition, ref innerVelocity, smoothTime);
 
@@ -58,7 +56,6 @@ public class CrossHair : MonoBehaviour
         // Smoothly recover the recoil offset (inner crosshair recoil recovery)
         if (!isRecoiling)
         {
-            // Recover recoil effect back to zero smoothly
             innerRecoilOffset = Vector2.Lerp(innerRecoilOffset, Vector2.zero, Time.deltaTime * recoilRecoverySpeed);
         }
 
@@ -81,12 +78,8 @@ public class CrossHair : MonoBehaviour
     // Rotate the player based on the inner crosshair's recoil
     private void RotatePlayerWithRecoil()
     {
-        // Only rotate the player when there's recoil
-        if (innerRecoilOffset != Vector2.zero)
-        {
-            // Apply recoil rotation to the player
-            playerMovement.ApplyRecoilRotation(innerRecoilOffset);
-        }
+        // Apply recoil to player rotation
+        playerMovement.ApplyRecoilRotation(innerRecoilOffset);
     }
 
     // Coroutine to handle recoil recovery after a short delay (for realism)

@@ -6,6 +6,7 @@ public class AIALLIES : MonoBehaviour
     {
         FollowPlayer,
         AttackEnemy,
+        DefendPlayer,
         HealPlayer
     }
 
@@ -13,6 +14,7 @@ public class AIALLIES : MonoBehaviour
     public Transform player;
     public float attackRange = 2f;
     public float followRange = 10f;
+    public float defendRange = 5f;
     public float healThreshold = 30f;
     public float attackCooldown = 1f;
     private float attackTimer;
@@ -23,9 +25,10 @@ public class AIALLIES : MonoBehaviour
     private PlayerHealth playerHealth;
     public float moveSpeed = 3f;
 
-    public Transform firePoint;
+    // For shooting (hitscan)
+    public GameObject bulletPrefab; // Assign in Inspector
+    public Transform firePoint; // Create an empty GameObject in front of the AI and assign it here
     public float bulletSpeed = 10f;
-    public LineRenderer laserLine; // För visuell feedback
 
     void Start()
     {
@@ -41,8 +44,7 @@ public class AIALLIES : MonoBehaviour
     {
         if (playerHealth == null) return;
 
-        attackTimer -= Time.deltaTime; // Countdown för attack
-        DetectEnemies(); // Upptäck fiender
+        DetectEnemies();  // Ensure enemies are detected
 
         switch (currentState)
         {
@@ -52,10 +54,15 @@ public class AIALLIES : MonoBehaviour
             case State.AttackEnemy:
                 AttackEnemy();
                 break;
+            case State.DefendPlayer:
+                DefendPlayer();
+                break;
             case State.HealPlayer:
                 HealPlayer();
                 break;
         }
+
+        EvaluateState();
     }
 
     void FollowPlayer()
@@ -67,23 +74,46 @@ public class AIALLIES : MonoBehaviour
 
         if (animator != null)
             animator.SetBool("isWalking", true);
+
+        Debug.Log("AI is following the player.");
     }
 
     void AttackEnemy()
     {
         if (currentEnemy == null)
         {
-            currentState = State.FollowPlayer; // Om ingen fiende finns, följ spelaren
+            Debug.Log("No current enemy to attack.");
             return;
         }
 
-        float distanceToEnemy = Vector2.Distance(transform.position, currentEnemy.transform.position);
+        Vector2 direction = (currentEnemy.transform.position - transform.position).normalized;
+        rb.velocity = direction * moveSpeed;
 
-        if (distanceToEnemy < attackRange && attackTimer <= 0)
+        if (animator != null)
+            animator.SetTrigger("attack");
+
+        // Check if the AI is within attack range and cooldown has passed
+        if (Vector2.Distance(transform.position, currentEnemy.transform.position) < attackRange && attackTimer <= 0)
         {
-            Shoot(); // Skjut om vi är nära och cooldown är redo
-            attackTimer = attackCooldown;
+            Debug.Log("In attack range and ready to shoot!");
+            Shoot();  // AI now shoots!
+            attackTimer = attackCooldown;  // Reset cooldown
         }
+
+        attackTimer -= Time.deltaTime;  // Countdown the attack timer
+    }
+
+    void DefendPlayer()
+    {
+        if (player == null || playerHealth == null) return;
+
+        Vector2 directionToPlayer = (player.position - transform.position).normalized;
+        rb.velocity = -directionToPlayer * moveSpeed;
+
+        if (animator != null)
+            animator.SetBool("isWalking", true);
+
+        Debug.Log("AI is defending the player.");
     }
 
     void HealPlayer()
@@ -99,41 +129,44 @@ public class AIALLIES : MonoBehaviour
             if (animator != null)
                 animator.SetTrigger("heal");
 
-            Debug.Log("AI heals player.");
+            Debug.Log("AI is healing the player.");
         }
     }
 
     void DetectEnemies()
     {
-        Collider2D[] enemiesInRange = Physics2D.OverlapCircleAll(transform.position, followRange, LayerMask.GetMask("Enemy"));
-        float closestDistance = Mathf.Infinity; // Starta med oändligt stort avstånd
-        Enemy nearestEnemy = null;
-
+        Collider2D[] enemiesInRange = Physics2D.OverlapCircleAll(transform.position, followRange);
         foreach (var enemyCollider in enemiesInRange)
         {
             Enemy enemy = enemyCollider.GetComponent<Enemy>();
             if (enemy != null)
             {
-                float distanceToEnemy = Vector2.Distance(transform.position, enemy.transform.position);
-                if (distanceToEnemy < closestDistance)
-                {
-                    closestDistance = distanceToEnemy;
-                    nearestEnemy = enemy; // Uppdatera närmaste fiende
-                }
+                currentEnemy = enemy;
+                currentState = State.AttackEnemy;  // Switch to attack state
+                Debug.Log("Enemy detected. Switching to AttackEnemy state.");
+                break;
             }
         }
+    }
 
-        if (nearestEnemy != null)
+    void EvaluateState()
+    {
+        if (playerHealth == null) return;
+
+        if (playerHealth.currentPlayerHealth < healThreshold)
         {
-            currentEnemy = nearestEnemy; // Sätt den närmaste fienden som aktuell
-            currentState = State.AttackEnemy; // Byt till AttackEnemy-state
-            Debug.Log("Enemy detected. Switching to AttackEnemy state.");
+            currentState = State.HealPlayer;
+            Debug.Log("Player health is low. Switching to HealPlayer state.");
+        }
+        else if (Vector2.Distance(transform.position, player.position) < defendRange)
+        {
+            currentState = State.DefendPlayer;
+            Debug.Log("AI is in defend range. Switching to DefendPlayer state.");
         }
         else
         {
-            // Om inga fiender hittades, gå tillbaka till FollowPlayer
-            currentEnemy = null;
             currentState = State.FollowPlayer;
+            Debug.Log("AI is in follow mode. Switching to FollowPlayer state.");
         }
     }
 
@@ -150,17 +183,25 @@ public class AIALLIES : MonoBehaviour
         Vector2 direction = (enemyPosition - firePosition).normalized;
         float maxShootDistance = 10f;
 
+        Debug.Log("Shooting at enemy. FirePoint: " + firePosition + ", Enemy Position: " + enemyPosition);
+
         RaycastHit2D hit = Physics2D.Raycast(firePosition, direction, maxShootDistance, LayerMask.GetMask("Enemy"));
 
         if (hit.collider != null)
         {
+            Debug.Log("AI hit " + hit.collider.name);
+
             Enemy enemy = hit.collider.GetComponent<Enemy>();
             if (enemy != null)
             {
-                enemy.TakeDamage(50);
+                enemy.TakeDamage(50); // Damage to enemy
             }
         }
+        else
+        {
+            Debug.Log("No hit. Raycast didn't detect an enemy.");
+        }
 
-        Debug.DrawRay(firePosition, direction * maxShootDistance, Color.red, 0.1f);
+        Debug.DrawRay(firePosition, direction * maxShootDistance, Color.red, 0.1f); // Debug line
     }
 }

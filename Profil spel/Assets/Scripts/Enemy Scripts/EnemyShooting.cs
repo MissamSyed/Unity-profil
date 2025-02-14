@@ -4,47 +4,46 @@ using UnityEngine;
 
 public class EnemyShooting : MonoBehaviour
 {
-    public Transform player;        
-    public LineRenderer lineRenderer; 
-    public float fireRate = 1f;     
-    public float shootingRange = 10f; 
-    public int damage = 20;         
+    public Transform player;
+    public Transform firePoint; // A fire point for shooting
+    public float fireRate = 1f;
+    public float shootingRange = 10f;
+    public int damage = 20;
+    public LayerMask playerLayer;
 
     private float nextFireTime = 0f;
 
+    void Start()
+    {
+        if (player == null)
+            player = GameObject.FindGameObjectWithTag("Player")?.transform; // Auto-find player
+    }
+
     void Update()
     {
-        if (Time.time >= nextFireTime)
+        if (player == null) return;
+
+        float distance = Vector2.Distance(transform.position, player.position);
+
+        if (distance <= shootingRange && Time.time >= nextFireTime)
         {
             Shoot();
-            nextFireTime = Time.time + fireRate; 
+            nextFireTime = Time.time + fireRate;
         }
     }
 
     void Shoot()
     {
-        if (player == null) return;
+        if (firePoint == null) firePoint = transform; // Fallback if firePoint is not set
 
-        Vector3 direction = (player.position - transform.position).normalized;
+        Vector2 direction = (player.position - firePoint.position).normalized;
 
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, direction, shootingRange);
-
-        
-        lineRenderer.SetPosition(0, transform.position);
-        lineRenderer.SetPosition(1, hit.collider ? hit.point : transform.position + direction * shootingRange);
-        lineRenderer.enabled = true;
+        RaycastHit2D hit = Physics2D.Raycast(firePoint.position, direction, shootingRange, playerLayer);
 
         if (hit.collider != null && hit.collider.CompareTag("Player"))
         {
-            hit.collider.GetComponent<PlayerHealth>()?.TakeDamage(damage); 
+            hit.collider.GetComponent<PlayerHealth>()?.TakeDamage(damage);
+            Debug.Log("Enemy hit the player!");
         }
-
-        
-        Invoke(nameof(HideShot), 0.1f);
-    }
-
-    void HideShot()
-    {
-        lineRenderer.enabled = false;
     }
 }

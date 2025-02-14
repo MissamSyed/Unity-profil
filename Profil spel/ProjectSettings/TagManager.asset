@@ -9,6 +9,8 @@ TagManager:
   - AmmoBox
   - HealthItem
   - Cameras
+  - InnerCrosshair
+  - Gun
   layers:
   - Default
   - TransparentFX
@@ -18,7 +20,7 @@ TagManager:
   - UI
   - Hitraycast
   - Item
-  - Enemy
+  - 
   - 
   - 
   - 
