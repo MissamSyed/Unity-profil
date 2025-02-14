@@ -2,48 +2,52 @@ using UnityEngine;
 
 public class PlayerWeapon : MonoBehaviour
 {
-    private Animator playerAnimator;
-    private Weapon currentWeapon; // Reference to the current weapon
-    private GameObject currentWeaponObject; // Reference to the current weapon GameObject
+    [SerializeField] private Weapon currentWeapon;  // Reference to the current weapon
 
-    [SerializeField] private GameObject[] weaponPrefabs; // Array to store the different weapon prefabs (AK47, MG42, MP40)
+    private int currentAmmo;
 
     void Start()
     {
-        playerAnimator = GetComponent<Animator>();
-        EquipWeapon(0); // Start with the first weapon (AK47, for example)
-    }
-
-    void Update()
-    {
-        // Switch weapons (this is just an example, you could use any input method you prefer)
-        if (Input.GetKeyDown(KeyCode.Alpha1)) // Switch to AK47 (index 0)
+        if (currentWeapon != null)
         {
-            EquipWeapon(0);
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha2)) // Switch to MG42 (index 1)
-        {
-            EquipWeapon(1);
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha3)) // Switch to MP40 (index 2)
-        {
-            EquipWeapon(2);
+            currentAmmo = currentWeapon.maxAmmo;  // Initialize ammo
         }
     }
 
-    private void EquipWeapon(int weaponIndex)
+    public Weapon GetCurrentWeapon()
     {
-        // Destroy the old weapon if it exists
-        if (currentWeaponObject != null)
-        {
-            Destroy(currentWeaponObject);
-        }
+        return currentWeapon;
+    }
 
-        // Instantiate the new weapon
-        currentWeaponObject = Instantiate(weaponPrefabs[weaponIndex], transform.position, Quaternion.identity);
-        currentWeapon = currentWeaponObject.GetComponent<Weapon>();
+    public int GetCurrentAmmo()
+    {
+        return currentAmmo;
+    }
 
-        // Set the idle animation for the new weapon
-        playerAnimator.SetTrigger(currentWeapon.IdleAnimationTrigger);
+    public void UseAmmo(int amount)
+    {
+        currentAmmo -= amount;
+        if (currentAmmo < 0) currentAmmo = 0;
+    }
+
+    public bool CanReload()
+    {
+        return currentAmmo < currentWeapon.maxAmmo;
+    }
+
+    public void Reload()
+    {
+        currentAmmo = currentWeapon.maxAmmo;
+    }
+
+    public void SwitchWeapon(Weapon newWeapon)
+    {
+        currentWeapon = newWeapon;
+        currentAmmo = currentWeapon.maxAmmo;  // Reset ammo when switching
+    }
+
+    public void PickupWeapon(Weapon weapon)
+    {
+        SwitchWeapon(weapon);
     }
 }
