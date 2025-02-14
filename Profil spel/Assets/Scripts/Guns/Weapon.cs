@@ -1,15 +1,13 @@
 using UnityEngine;
 
-public class Weapon : MonoBehaviour
+[CreateAssetMenu(fileName = "New Weapon", menuName = "Weapon")]
+public class Weapon : ScriptableObject
 {
-    [SerializeField] private string weaponName;  // Name of the weapon (e.g., "AK47", "MG42", etc.)
-    [SerializeField] private string shootAnimationTrigger; // Trigger for shoot animation
-    [SerializeField] private string reloadAnimationTrigger; // Trigger for reload animation
-    [SerializeField] private string idleAnimationTrigger; // Trigger for idle animation
-
-    // Properties to access the weapon's data
-    public string WeaponName => weaponName;
-    public string ShootAnimationTrigger => shootAnimationTrigger;
-    public string ReloadAnimationTrigger => reloadAnimationTrigger;
-    public string IdleAnimationTrigger => idleAnimationTrigger; // Added idle trigger
+    public string weaponName = "DefaultWeapon";  // Name of the weapon
+    public int maxAmmo = 30;  // Maximum ammo the weapon can hold
+    public float reloadTime = 1.5f;  // Time it takes to reload
+    public float fireRate = 0.1f;  // Time between shots (semi-auto)
+    public int damage = 25;  // Damage per shot
+    public string shootTrigger = "Shoot";  // Animator trigger for shooting
+    public string reloadTrigger = "Reload";  // Animator trigger for reloading
 }

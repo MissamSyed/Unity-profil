@@ -1,170 +1,109 @@
-using System.Collections;
 using UnityEngine;
-using UnityEngine.InputSystem;
+using System.Collections;
 
 public class PlayerShooting : MonoBehaviour
 {
+    [SerializeField] private PlayerWeapon playerWeapon;
     [SerializeField] private Animator animator;
-    [SerializeField] private string shootAnimationTrigger = "Shoot";
-    [SerializeField] private string reloadAnimationTrigger = "Reload";
+    [SerializeField] private Transform bulletSpawnPoint;
+    [SerializeField] private LayerMask hitLayers;
 
-    [SerializeField] float fireRate = 0.1f;
-    [SerializeField] float maxShootDistance = 10f;
-    [SerializeField] LayerMask hitLayers;
-    [SerializeField] GameObject gun;
+    [Header("Recoil Settings")]
+    [SerializeField] private CrossHair crosshair;
 
-    [SerializeField] int magazineSize = 30;
-    [SerializeField] int totalAmmo = 60;
-    [SerializeField] float reloadTime = 1.5f;
-
-    // Bullet casing effect
+    [Header("Bullet Casing and Tracer Effects")]
     [SerializeField] private GameObject casingPrefab;
     [SerializeField] private Transform casingSpawnPoint;
     [SerializeField] private float casingEjectionForce = 5f;
-
-    // Line Renderer Tracer Effect
-    [SerializeField] private LineRenderer tracerPrefab;  // Assign in the Inspector
-    [SerializeField] private Transform bulletSpawnPoint;
+    [SerializeField] private LineRenderer tracerPrefab;
     [SerializeField] private float tracerSpeed = 50f;
     [SerializeField] private float tracerFadeTime = 0.05f;
 
-    // Recoil System
-    [SerializeField] private CrossHair crosshair; // Reference to the CrossHair script
-
-    private int currentAmmo;
-    private float nextFireTime = 0f;
     private bool isReloading = false;
-    private bool isAutomatic = false;
+    private float nextFireTime = 0f;
 
-    private HUD hud;
-
-    void Start()
+    private void Start()
     {
-        GameObject camerasGameObject = GameObject.FindWithTag("Cameras");
-        if (camerasGameObject != null)
+        if (playerWeapon.GetCurrentWeapon() != null)
         {
-            hud = camerasGameObject.GetComponent<HUD>();
+            // Initial setup: use max ammo from the weapon data
+            Debug.Log("Weapon Initialized: " + playerWeapon.GetCurrentWeapon().weaponName);
+        }
+    }
+
+    private void Update()
+    {
+        if (isReloading || playerWeapon.GetCurrentWeapon() == null) return;
+
+        Weapon currentWeapon = playerWeapon.GetCurrentWeapon();  // Changed from WeaponData to Weapon
+
+        // Handle shooting
+        if (Input.GetButtonDown("Fire1") && Time.time >= nextFireTime)
+        {
+            Shoot(currentWeapon);
+            nextFireTime = Time.time + currentWeapon.fireRate;
         }
 
-        if (hud != null)
+        // Handle reloading
+        if (Input.GetKeyDown(KeyCode.R) && playerWeapon.CanReload())
         {
-            hud.SetAmoCount(currentAmmo);
+            StartCoroutine(Reload(currentWeapon));
+        }
+    }
+
+    private void Shoot(Weapon weapon)
+    {
+        if (playerWeapon.GetCurrentAmmo() > 0)
+        {
+            playerWeapon.UseAmmo(1);  // Decrease ammo by 1 when firing
+
+            animator.SetTrigger(weapon.shootTrigger);
+
+            Vector2 startPosition = bulletSpawnPoint.position;
+            Vector2 direction = bulletSpawnPoint.up;
+            RaycastHit2D hit = Physics2D.Raycast(startPosition, direction, weapon.fireRate, hitLayers);
+            if (hit.collider != null && hit.collider.CompareTag("Enemy"))
+            {
+                Enemy enemy = hit.collider.GetComponent<Enemy>();
+                if (enemy != null)
+                {
+                    enemy.TakeDamage(weapon.damage);
+                }
+            }
+
+            CreateTracerEffect(startPosition, direction);
+            EmitCasing();
+
+            if (crosshair != null)
+            {
+                crosshair.ApplyRecoil();
+            }
         }
         else
-        {
-            Debug.LogError("HUD script not found on the Cameras GameObject!");
-        }
-
-        currentAmmo = magazineSize;
-    }
-
-    void Update()
-    {
-        if (isReloading) return;
-
-        if (Input.GetKeyDown(KeyCode.V))
-        {
-            isAutomatic = !isAutomatic;
-            Debug.Log(isAutomatic ? "Fire Mode: Automatic" : "Fire Mode: Semi-Auto");
-        }
-
-        if (!isAutomatic && Input.GetButtonDown("Fire1"))
-        {
-            TryFire();
-        }
-
-        if (isAutomatic && Input.GetButton("Fire1"))
-        {
-            TryFire();
-            fireRate = 0.1f;
-        }
-
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            StartCoroutine(Reload());
-        }
-    }
-
-    void TryFire()
-    {
-        if (Time.time >= nextFireTime && currentAmmo > 0)
-        {
-            Fire();
-            nextFireTime = Time.time + fireRate;
-        }
-        else if (currentAmmo <= 0)
         {
             Debug.Log("Out of ammo! Reload needed.");
         }
     }
 
-    void Fire()
-    {
-        currentAmmo--;
-        animator.SetTrigger(shootAnimationTrigger);
-        animator.SetBool("IsShooting", true);
-
-        if (hud != null)
-        {
-            hud.SetAmoCount(currentAmmo);
-        }
-
-        Vector2 gunPosition = bulletSpawnPoint.position;
-        Vector2 gunDirection = bulletSpawnPoint.up;
-        Vector2 endPoint = gunPosition + (gunDirection * maxShootDistance);
-
-        RaycastHit2D hit = Physics2D.Raycast(gunPosition, gunDirection, maxShootDistance, hitLayers);
-
-        if (hit.collider != null)
-        {
-            endPoint = hit.point;
-
-            if (hit.collider.CompareTag("Enemy"))
-            {
-                Enemy enemy = hit.collider.GetComponent<Enemy>();
-                if (enemy != null)
-                {
-                    enemy.TakeDamage(50);
-                }
-            }
-        }
-
-        // Create tracer effect using Line Renderer
-        CreateTracerEffect(gunPosition, endPoint);
-
-        StartCoroutine(ShowDebugRay(gunPosition, endPoint));
-
-        EmitCasing();
-
-        // Apply recoil effect to crosshair
-        if (crosshair != null)
-        {
-            crosshair.ApplyRecoil();
-        }
-
-        StartCoroutine(StopShootingAnimation());
-    }
-
-    // Create the Tracer effect with Line Renderer
-    private void CreateTracerEffect(Vector2 start, Vector2 end)
+    private void CreateTracerEffect(Vector2 start, Vector2 direction)
     {
         if (tracerPrefab != null)
         {
             LineRenderer tracer = Instantiate(tracerPrefab, start, Quaternion.identity);
             tracer.positionCount = 2;
             tracer.SetPosition(0, start);
-            tracer.SetPosition(1, start); // Start from the gun
+            tracer.SetPosition(1, start);
 
-            StartCoroutine(AnimateTracer(tracer, start, end));
+            StartCoroutine(AnimateTracer(tracer, start, direction));
 
             Destroy(tracer.gameObject, tracerFadeTime);
         }
     }
 
-    // Animate the tracer movement
-    private IEnumerator AnimateTracer(LineRenderer tracer, Vector2 start, Vector2 end)
+    private IEnumerator AnimateTracer(LineRenderer tracer, Vector2 start, Vector2 direction)
     {
         float time = 0f;
+        Vector2 end = start + direction * 50f;
         while (time < tracerFadeTime)
         {
             time += Time.deltaTime * tracerSpeed;
@@ -187,68 +126,29 @@ public class PlayerShooting : MonoBehaviour
         }
     }
 
-    IEnumerator StopShootingAnimation()
+    private IEnumerator Reload(Weapon weapon)
     {
-        yield return new WaitForSeconds(0.25f);
-        animator.SetBool("IsShooting", false);
-    }
+        isReloading = true;
+        animator.SetTrigger(weapon.reloadTrigger);
+        Debug.Log("Reloading...");
 
-    IEnumerator ShowDebugRay(Vector2 start, Vector2 end)
-    {
-        float duration = 0.08f;
-        Debug.DrawLine(start, end, Color.red, duration);
-        yield return new WaitForSeconds(duration);
-    }
+        yield return new WaitForSeconds(weapon.reloadTime);
 
-    IEnumerator Reload()
-    {
-        animator.SetTrigger(reloadAnimationTrigger);
-        animator.SetBool("IsReloading", true);
-
-        if (totalAmmo > 0 && currentAmmo < magazineSize)
-        {
-            isReloading = true;
-            Debug.Log("Reloading...");
-            yield return new WaitForSeconds(reloadTime);
-
-            int ammoNeeded = magazineSize - currentAmmo;
-            int ammoToReload = Mathf.Min(ammoNeeded, totalAmmo);
-
-            currentAmmo += ammoToReload;
-            totalAmmo -= ammoToReload;
-
-            isReloading = false;
-            Debug.Log("Reloaded! Ammo: " + currentAmmo + "/" + totalAmmo);
-
-            if (hud != null)
-            {
-                hud.SetAmoCount(currentAmmo);
-            }
-        }
-        else
-        {
-            Debug.Log("No more ammo left!");
-        }
-
-        StartCoroutine(StopReloadingAnimation());
-    }
-
-    IEnumerator StopReloadingAnimation()
-    {
-        yield return new WaitForSeconds(0f);
-        animator.SetBool("IsReloading", false);
+        playerWeapon.Reload();  // Reload to maxAmmo
+        isReloading = false;
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("AmmoBox"))
         {
-            int ammoNeeded = 60 - totalAmmo;
-            int refillAmount = Mathf.Max(0, ammoNeeded);
-            totalAmmo += refillAmount;
+            int ammoNeeded = playerWeapon.GetCurrentWeapon().maxAmmo - playerWeapon.GetCurrentAmmo();
+            int ammoToReload = Mathf.Min(ammoNeeded, 60);  // Assuming 60 is the max refill ammo available
+
+            playerWeapon.GetCurrentAmmo() += ammoToReload;
             Destroy(other.gameObject);
 
-            Debug.Log("Picked up AmmoBox! Total Ammo: " + totalAmmo);
+            Debug.Log("Picked up AmmoBox! Ammo now: " + playerWeapon.GetCurrentAmmo());
         }
     }
 }
