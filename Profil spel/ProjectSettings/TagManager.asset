@@ -9,11 +9,8 @@ TagManager:
   - AmmoBox
   - HealthItem
   - Cameras
-  - AK-47
-  - MP-40
-  - Mauser-K98
-  - MG-42
   - InnerCrosshair
+  - Gun
   layers:
   - Default
   - TransparentFX

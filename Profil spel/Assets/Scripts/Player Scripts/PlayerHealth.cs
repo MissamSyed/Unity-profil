@@ -1,24 +1,28 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class PlayerHealth : MonoBehaviour
 {
-    public int currentPlayerHealth = 100;  
+    public int currentPlayerHealth = 100;
     public int maxHealth = 100;
-    
+    private Vector3 originalSpawnPoint; // Stores the initial spawn position
 
-    //Take damage system
+    void Start()
+    {
+        currentPlayerHealth = maxHealth;
+        originalSpawnPoint = transform.position; // Save the initial spawn position
+    }
+
+    // Take damage system
     public void TakeDamage(int damageAmount)
     {
-        currentPlayerHealth -= damageAmount; //Reduce health by the damage amount
+        currentPlayerHealth -= damageAmount;
 
-        //Check if health reaches 0 or below die if it is 0 or below
         if (currentPlayerHealth <= 0)
         {
             currentPlayerHealth = 0;
-            Respawn(); 
+            StartCoroutine(Respawn());
         }
 
         Debug.Log("Player's current health: " + currentPlayerHealth);
@@ -28,22 +32,33 @@ public class PlayerHealth : MonoBehaviour
     {
         if (other.CompareTag("HealthItem"))
         {
-            
-            Destroy(other.gameObject); //Destroy the ammo box after touching the player
-
-            Debug.Log("Picked Up Healing Item: ");
+            Destroy(other.gameObject); // Destroy the healing item after touching the player
+            Debug.Log("Picked Up Healing Item!");
         }
     }
 
-    //Player death system
-    private void Respawn()
+    // Respawn at last checkpoint or return to main menu
+    private IEnumerator Respawn()
     {
-            
-     Scene currentScene = SceneManager.GetActiveScene();
-     SceneManager.LoadScene(currentScene.name);
+        Debug.Log("Player Died! Respawning...");
 
+        yield return new WaitForSeconds(2f); // Optional delay before respawning
 
+        if (CheckPoint.LastCheckpointPosition != null)
+        {
+            // Respawn at the last checkpoint position
+            transform.position = CheckPoint.LastCheckpointPosition.position;
+            Debug.Log("Respawned at last checkpoint!");
+        }
+        else
+        {
+            // No checkpoint captured, return to the Main Menu
+            Debug.Log("No checkpoint captured! Returning to Main Menu...");
+            SceneManager.LoadScene("MainMenu"); // Replace with your actual main menu scene name
+            yield break; // Stop execution
+        }
+
+        // Reset health after respawning
+        currentPlayerHealth = maxHealth;
     }
-
-
 }

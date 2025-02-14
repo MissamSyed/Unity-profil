@@ -17,71 +17,68 @@ public class PlayerShooting : MonoBehaviour
     [SerializeField] int totalAmmo = 60;
     [SerializeField] float reloadTime = 1.5f;
 
-    // Bullet Casing Related Fields
-    [SerializeField] private GameObject casingPrefab;  // Bullet casing particle system prefab
-    [SerializeField] private Transform casingSpawnPoint;  // Where the casing will spawn (near gun barrel)
-    [SerializeField] private float casingEjectionForce = 5f; // Force applied to casing ejection
+    // Bullet casing effect
+    [SerializeField] private GameObject casingPrefab;
+    [SerializeField] private Transform casingSpawnPoint;
+    [SerializeField] private float casingEjectionForce = 5f;
 
-    // Add reference to CrossHair script
+    // Line Renderer Tracer Effect
+    [SerializeField] private LineRenderer tracerPrefab;  // Assign in the Inspector
+    [SerializeField] private Transform bulletSpawnPoint;
+    [SerializeField] private float tracerSpeed = 50f;
+    [SerializeField] private float tracerFadeTime = 0.05f;
+
+    // Recoil System
     [SerializeField] private CrossHair crosshair; // Reference to the CrossHair script
 
     private int currentAmmo;
     private float nextFireTime = 0f;
     private bool isReloading = false;
-    private bool isAutomatic = false; // Fire mode: false = Semi, true = Auto
+    private bool isAutomatic = false;
 
-    private HUD hud; // Reference to the HUD script
+    private HUD hud;
 
     void Start()
     {
-        // Find the Cameras GameObject by tag
         GameObject camerasGameObject = GameObject.FindWithTag("Cameras");
-
-        // Ensure the Cameras GameObject was found
         if (camerasGameObject != null)
         {
-            // Get the HUD component from the Cameras GameObject
             hud = camerasGameObject.GetComponent<HUD>();
         }
 
-        // Optionally check if the HUD script was found
         if (hud != null)
         {
-            hud.SetAmoCount(currentAmmo); // Set the initial ammo count on HUD
+            hud.SetAmoCount(currentAmmo);
         }
         else
         {
             Debug.LogError("HUD script not found on the Cameras GameObject!");
         }
 
-        currentAmmo = magazineSize; // Start with a full magazine
+        currentAmmo = magazineSize;
     }
 
     void Update()
     {
-        if (isReloading) return; // No shooting while reloading
+        if (isReloading) return;
 
-        // Mode selection with "V"
         if (Input.GetKeyDown(KeyCode.V))
         {
             isAutomatic = !isAutomatic;
             Debug.Log(isAutomatic ? "Fire Mode: Automatic" : "Fire Mode: Semi-Auto");
         }
 
-        // Semi-Auto 
         if (!isAutomatic && Input.GetButtonDown("Fire1"))
         {
             TryFire();
         }
 
-        // Automatic 
         if (isAutomatic && Input.GetButton("Fire1"))
         {
             TryFire();
             fireRate = 0.1f;
         }
 
-        // Reloading 
         if (Input.GetKeyDown(KeyCode.R))
         {
             StartCoroutine(Reload());
@@ -101,33 +98,25 @@ public class PlayerShooting : MonoBehaviour
         }
     }
 
-    // Hit and scan firing and ammo mechanic
     void Fire()
     {
-        currentAmmo--; // Reduce ammo from the mag
-
-        // Trigger shooting animation and set IsShooting to true to start it
+        currentAmmo--;
         animator.SetTrigger(shootAnimationTrigger);
         animator.SetBool("IsShooting", true);
 
-        // Update ammo counter UI
         if (hud != null)
         {
             hud.SetAmoCount(currentAmmo);
         }
 
-        // Raycasting system (Hit and scan method)
-        Vector2 gunPosition = gun.transform.position;
-        Vector2 gunDirection = gun.transform.up;
+        Vector2 gunPosition = bulletSpawnPoint.position;
+        Vector2 gunDirection = bulletSpawnPoint.up;
         Vector2 endPoint = gunPosition + (gunDirection * maxShootDistance);
 
-        int layerMask = hitLayers & ~LayerMask.GetMask("Ignore Raycast");
-
-        RaycastHit2D hit = Physics2D.Raycast(gunPosition, gunDirection, maxShootDistance, layerMask);
+        RaycastHit2D hit = Physics2D.Raycast(gunPosition, gunDirection, maxShootDistance, hitLayers);
 
         if (hit.collider != null)
         {
-            Debug.Log("Hit: " + hit.collider.name);
             endPoint = hit.point;
 
             if (hit.collider.CompareTag("Enemy"))
@@ -135,37 +124,63 @@ public class PlayerShooting : MonoBehaviour
                 Enemy enemy = hit.collider.GetComponent<Enemy>();
                 if (enemy != null)
                 {
-                    enemy.TakeDamage(35); // Damage to enemy
+                    enemy.TakeDamage(50);
                 }
             }
         }
 
+        // Create tracer effect using Line Renderer
+        CreateTracerEffect(gunPosition, endPoint);
+
         StartCoroutine(ShowDebugRay(gunPosition, endPoint));
 
-        // Emit the casing after shooting
         EmitCasing();
 
-        // Call ApplyRecoil on the CrossHair script
+        // Apply recoil effect to crosshair
         if (crosshair != null)
         {
-            crosshair.ApplyRecoil(); // Apply recoil to inner crosshair and rotate player
+            crosshair.ApplyRecoil();
         }
 
         StartCoroutine(StopShootingAnimation());
+    }
+
+    // Create the Tracer effect with Line Renderer
+    private void CreateTracerEffect(Vector2 start, Vector2 end)
+    {
+        if (tracerPrefab != null)
+        {
+            LineRenderer tracer = Instantiate(tracerPrefab, start, Quaternion.identity);
+            tracer.positionCount = 2;
+            tracer.SetPosition(0, start);
+            tracer.SetPosition(1, start); // Start from the gun
+
+            StartCoroutine(AnimateTracer(tracer, start, end));
+
+            Destroy(tracer.gameObject, tracerFadeTime);
+        }
+    }
+
+    // Animate the tracer movement
+    private IEnumerator AnimateTracer(LineRenderer tracer, Vector2 start, Vector2 end)
+    {
+        float time = 0f;
+        while (time < tracerFadeTime)
+        {
+            time += Time.deltaTime * tracerSpeed;
+            tracer.SetPosition(1, Vector2.Lerp(start, end, time / tracerFadeTime));
+            yield return null;
+        }
     }
 
     private void EmitCasing()
     {
         if (casingPrefab != null && casingSpawnPoint != null)
         {
-            // Instantiate the casing particle system at the spawn point
             GameObject casing = Instantiate(casingPrefab, casingSpawnPoint.position, casingSpawnPoint.rotation);
-
-            // Add force to the casing to simulate ejection
             Rigidbody2D rb = casing.GetComponent<Rigidbody2D>();
             if (rb != null)
             {
-                // Randomize the direction a bit to make it feel more natural
                 Vector2 ejectDirection = new Vector2(Random.Range(-1f, 1f), Random.Range(0.5f, 1f)).normalized;
                 rb.AddForce(ejectDirection * casingEjectionForce, ForceMode2D.Impulse);
             }
@@ -175,10 +190,9 @@ public class PlayerShooting : MonoBehaviour
     IEnumerator StopShootingAnimation()
     {
         yield return new WaitForSeconds(0.25f);
-        animator.SetBool("IsShooting", false); // Stop shooting animation
+        animator.SetBool("IsShooting", false);
     }
 
-    // Debug Hit and scan system
     IEnumerator ShowDebugRay(Vector2 start, Vector2 end)
     {
         float duration = 0.08f;
@@ -186,7 +200,6 @@ public class PlayerShooting : MonoBehaviour
         yield return new WaitForSeconds(duration);
     }
 
-    // Reload mechanic
     IEnumerator Reload()
     {
         animator.SetTrigger(reloadAnimationTrigger);
@@ -196,7 +209,6 @@ public class PlayerShooting : MonoBehaviour
         {
             isReloading = true;
             Debug.Log("Reloading...");
-
             yield return new WaitForSeconds(reloadTime);
 
             int ammoNeeded = magazineSize - currentAmmo;
@@ -208,7 +220,6 @@ public class PlayerShooting : MonoBehaviour
             isReloading = false;
             Debug.Log("Reloaded! Ammo: " + currentAmmo + "/" + totalAmmo);
 
-            // Update ammo count in the HUD after reloading
             if (hud != null)
             {
                 hud.SetAmoCount(currentAmmo);
@@ -225,7 +236,7 @@ public class PlayerShooting : MonoBehaviour
     IEnumerator StopReloadingAnimation()
     {
         yield return new WaitForSeconds(0f);
-        animator.SetBool("IsReloading", false); // Stop reloading animation
+        animator.SetBool("IsReloading", false);
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -233,13 +244,11 @@ public class PlayerShooting : MonoBehaviour
         if (other.CompareTag("AmmoBox"))
         {
             int ammoNeeded = 60 - totalAmmo;
-            int refillAmount = Mathf.Max(0, ammoNeeded); //Checks so it doesn't go above 60
-
+            int refillAmount = Mathf.Max(0, ammoNeeded);
             totalAmmo += refillAmount;
-            Destroy(other.gameObject); //Destroy the ammo box after touching the player
+            Destroy(other.gameObject);
 
             Debug.Log("Picked up AmmoBox! Total Ammo: " + totalAmmo);
         }
     }
-
 }
