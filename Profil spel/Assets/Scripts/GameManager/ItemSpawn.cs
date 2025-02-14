@@ -8,8 +8,8 @@ public class ItemSpawn : MonoBehaviour
     [SerializeField] GameObject ammoboxPrefab;
     [SerializeField] float minSpawnTime = 1f;
     [SerializeField] float maxSpawnTime = 2f;
-    [SerializeField] float spawnDistanceMin = 1f;  // Minimum distance from the screen edge
-    [SerializeField] float spawnDistanceMax = 5f;  // Maximum distance from the screen edge
+    [SerializeField] float spawnDistanceMin = 1f;  
+    [SerializeField] float spawnDistanceMax = 5f;  
     [SerializeField] float initialDelay = 1f;
 
     private Vector2 screenBounds;
@@ -19,27 +19,27 @@ public class ItemSpawn : MonoBehaviour
     {
        
 
-        // Calculate screen bounds for 2D (assuming the camera is orthographic)
+        //Calculate screen bounds for 2D 
         Camera camera = Camera.main;
         screenBounds = new Vector2(camera.orthographicSize * camera.aspect, camera.orthographicSize);
 
-        // Start spawning enemies after the initial delay
+        //Start spawning enemies after the delay
         StartCoroutine(SpawnHealingCoroutine());
         StartCoroutine(SpawnAmmoCoroutine());
     }
 
     IEnumerator SpawnHealingCoroutine()
     {
-        // Wait for the initial delay before the first spawn
+        //Wait for the delay¨before the first spawn
         yield return new WaitForSeconds(initialDelay);
 
         while (true)
         {
-            // Get a random spawn position
+            //Get a random spawn position
             Vector2 spawnPosition = GetRandomSpawnPosition();
-            GameObject healingItem = Instantiate(healingPrefab, spawnPosition, Quaternion.identity);  // Spawn the enemy prefab
+            GameObject healingItem = Instantiate(healingPrefab, spawnPosition, Quaternion.identity);  
 
-            // Wait for a random amount of time before spawning the next enemy
+            //Wait for a random amount of time before spawning the next enemy
             float spawnTime = Random.Range(minSpawnTime, maxSpawnTime);
             yield return new WaitForSeconds(spawnTime);
         }
@@ -47,16 +47,16 @@ public class ItemSpawn : MonoBehaviour
 
     IEnumerator SpawnAmmoCoroutine()
     {
-        // Wait for the initial delay before the first spawn
+        //Wait for the delay before the first spawn
         yield return new WaitForSeconds(initialDelay);
 
         while (true)
         {
-            // Get a random spawn position
+            //Get a random spawn position
             Vector2 spawnPosition = GetRandomSpawnPosition();
             GameObject ammoBox = Instantiate(ammoboxPrefab, spawnPosition, Quaternion.identity);  // Spawn the enemy prefab
 
-            // Wait for a random amount of time before spawning the next enemy
+            //Wait for a random amount of time before spawning the next enemy
             float spawnTime = Random.Range(minSpawnTime, maxSpawnTime);
             yield return new WaitForSeconds(spawnTime);
         }
@@ -64,26 +64,26 @@ public class ItemSpawn : MonoBehaviour
 
     Vector2 GetRandomSpawnPosition()
     {
-        // Randomly choose a side (top, bottom, left, right)
+        //Randomly choose a side 
         int side = Random.Range(0, 4);
 
-        // Randomly pick spawn distance within the given range
+        //Randomly pick spawn distance 
         float spawnDistance = Random.Range(spawnDistanceMin, spawnDistanceMax);
 
         Vector2 spawnPosition = Vector2.zero;
 
         switch (side)
         {
-            case 0:  // Top side
+            case 0:  //Top side
                 spawnPosition = new Vector2(Random.Range(-screenBounds.x, screenBounds.x), screenBounds.y + spawnDistance);
                 break;
-            case 1:  // Bottom side
+            case 1:  //Bottom side
                 spawnPosition = new Vector2(Random.Range(-screenBounds.x, screenBounds.x), -screenBounds.y - spawnDistance);
                 break;
-            case 2:  // Right side
+            case 2:  //Right side
                 spawnPosition = new Vector2(screenBounds.x + spawnDistance, Random.Range(-screenBounds.y, screenBounds.y));
                 break;
-            case 3:  // Left side
+            case 3:  //Left side
                 spawnPosition = new Vector2(-screenBounds.x - spawnDistance, Random.Range(-screenBounds.y, screenBounds.y));
                 break;
         }
