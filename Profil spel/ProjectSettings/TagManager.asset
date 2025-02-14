@@ -11,6 +11,7 @@ TagManager:
   - Cameras
   - InnerCrosshair
   - Gun
+  - Checkpoint
   layers:
   - Default
   - TransparentFX
