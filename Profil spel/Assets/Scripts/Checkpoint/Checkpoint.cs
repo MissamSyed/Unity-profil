@@ -1,6 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using TMPro;  // Ensure you import the TMP namespace
+using System.Collections;
 using UnityEngine.SceneManagement;
 
 public class CheckPoint : MonoBehaviour
@@ -14,12 +14,19 @@ public class CheckPoint : MonoBehaviour
     private static int capturedCheckpoints = 0; // Track the number of captured checkpoints
     private static int totalCheckpoints = 3; // Total number of checkpoints in the level (adjust if needed)
 
+    // Reference to the TextMeshPro UI Text to display messages
+    [SerializeField] private TextMeshProUGUI checkpointStatusText;
+
     // Property to access the last checkpoint position
     public static Transform LastCheckpointPosition => lastCheckpointPosition;
 
     void Start()
     {
-        // You can initialize other elements if needed
+        // Ensure that the UI text is cleared initially
+        if (checkpointStatusText != null)
+        {
+            checkpointStatusText.text = "";  // Clear text initially
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -43,7 +50,8 @@ public class CheckPoint : MonoBehaviour
             {
                 StopCoroutine(CaptureCheckpoint());
                 isCapturing = false; // Reset isCapturing so we can capture again
-                Debug.Log("Capture process canceled: Player left the area.");
+                UpdateCheckpointStatusText("Capture process canceled.");
+                StartCoroutine(ClearCheckpointStatusText(2f)); // Add delay for cancellation text
             }
         }
     }
@@ -52,6 +60,9 @@ public class CheckPoint : MonoBehaviour
     {
         isCapturing = true;
         Debug.Log("Started capturing checkpoint...");
+
+        // Update the text to notify the player
+        UpdateCheckpointStatusText("Started capturing checkpoint...");
 
         float captureProgress = 0f;
 
@@ -80,6 +91,12 @@ public class CheckPoint : MonoBehaviour
         // Log checkpoint capture
         Debug.Log("Checkpoint captured!");
 
+        // Update the text to notify the player
+        UpdateCheckpointStatusText("Checkpoint captured!");
+
+        // Start a coroutine to hide the message after 2 seconds
+        StartCoroutine(ClearCheckpointStatusText(2f));
+
         // Increment captured checkpoints
         capturedCheckpoints++;
 
@@ -105,5 +122,24 @@ public class CheckPoint : MonoBehaviour
     public static int GetCapturedCheckpoints()
     {
         return capturedCheckpoints;
+    }
+
+    // Method to update the checkpoint status text
+    private void UpdateCheckpointStatusText(string message)
+    {
+        if (checkpointStatusText != null)
+        {
+            checkpointStatusText.text = message;
+        }
+    }
+
+    // Coroutine to clear the checkpoint status text after a specified delay
+    private IEnumerator ClearCheckpointStatusText(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        if (checkpointStatusText != null)
+        {
+            checkpointStatusText.text = ""; // Clear the text after the delay
+        }
     }
 }
