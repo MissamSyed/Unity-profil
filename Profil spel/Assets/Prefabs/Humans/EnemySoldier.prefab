@@ -102,7 +102,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: daff9d6046051aa4a89f70c4bdd02fdd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyHealth: 400
+  enemyHealth: 300
 --- !u!58 &2412705748210232959
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -161,9 +161,9 @@ Rigidbody2D:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 0
 --- !u!114 &6065053503776249463
 MonoBehaviour:
@@ -216,7 +216,7 @@ GameObject:
   - component: {fileID: 4425016367716552518}
   - component: {fileID: 7851786424962179027}
   - component: {fileID: 5984841323531336353}
-  m_Layer: 6
+  m_Layer: 2
   m_Name: Triangle
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -232,7 +232,7 @@ Transform:
   m_GameObject: {fileID: 2885333592240039644}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0.32320058, w: 0.9463305}
-  m_LocalPosition: {x: 0.26, y: -0.004, z: 0}
+  m_LocalPosition: {x: 0.39, y: 0.1, z: 0}
   m_LocalScale: {x: 0.2753801, y: 0.22916335, z: 0.19272}
   m_ConstrainProportionsScale: 0
   m_Children: []
