@@ -16,12 +16,6 @@ VisualElement {
     min-height: 60px;
 }
 
-
-
-<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
-    <ui:VisualElement class="hud">
-        <ui:Label name="weaponName" text="MP40" class="weapon-label"/>
-        <ui:Label name="ammoCount" text="30 / 120" class="ammo-label"/>
-        <ui:VisualElement name="miniMap" class="minimap"/>
-    </ui:VisualElement>
-</ui:UXML>
+#Default.unity-progress-bar_barckground {
+    background-color: rgb(114, 114, 114);
+}
