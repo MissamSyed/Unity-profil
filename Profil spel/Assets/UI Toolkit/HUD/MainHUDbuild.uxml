@@ -7,4 +7,5 @@
             <ui:VisualElement name="Grenade" style="flex-grow: 1; position: absolute; height: 137px; width: 130px; top: 1px; left: 198px; background-image: url(&quot;project://database/Assets/UI%20Toolkit/HUD%20sprites/GerGrenade_32x32.png?fileID=21300000&amp;guid=357805d8c65f5044e87b462089166a28&amp;type=3#GerGrenade_32x32&quot;); border-left-color: rgba(178, 173, 173, 0); border-right-color: rgba(178, 173, 173, 0); border-top-color: rgba(178, 173, 173, 0); border-bottom-color: rgba(178, 173, 173, 0); border-top-width: 3px; border-right-width: 3px; border-bottom-width: 3px; border-left-width: 3px;" />
         </ui:VisualElement>
     </ui:VisualElement>
+    <ui:VisualElement style="flex-grow: 1;" />
 </ui:UXML>
