@@ -8,7 +8,7 @@ public class PlayerShooting : MonoBehaviour
     [SerializeField] private string shootAnimationTrigger = "Shoot";
     [SerializeField] private string reloadAnimationTrigger = "Reload";
 
-    [SerializeField] float fireRate = 0.1f;
+    [SerializeField] float fireRate = 0.6f;  // Default fire rate (semi-automatic)
     [SerializeField] float maxShootDistance = 10f;
     [SerializeField] LayerMask hitLayers;
     [SerializeField] GameObject gun;
@@ -23,7 +23,7 @@ public class PlayerShooting : MonoBehaviour
     [SerializeField] private float casingEjectionForce = 5f;
 
     // Line Renderer Tracer Effect
-    [SerializeField] private LineRenderer tracerPrefab;  // Assign in the Inspector
+    [SerializeField] private LineRenderer tracerPrefab;
     [SerializeField] private Transform bulletSpawnPoint;
     [SerializeField] private float tracerSpeed = 50f;
     [SerializeField] private float tracerFadeTime = 0.05f;
@@ -31,9 +31,9 @@ public class PlayerShooting : MonoBehaviour
     // Recoil System
     [SerializeField] private CrossHair crosshair; // Reference to the CrossHair script
 
-    // Muzzle Flash Particle System
-    [SerializeField] private ParticleSystem muzzleFlash; // Muzzle flash particle system
-    [SerializeField] private Transform gunBarrel; // Reference to the gun barrel (end of the gun)
+    // Muzzle Flash Sprite
+    [SerializeField] private GameObject muzzleFlashPrefab;  // Muzzle flash sprite prefab
+    [SerializeField] private Transform gunBarrel;  // Reference to the gun barrel position
 
     private int currentAmmo;
     private float nextFireTime = 0f;
@@ -70,6 +70,16 @@ public class PlayerShooting : MonoBehaviour
         {
             isAutomatic = !isAutomatic;
             Debug.Log(isAutomatic ? "Fire Mode: Automatic" : "Fire Mode: Semi-Auto");
+
+            // Adjust the fire rate based on the mode
+            if (isAutomatic)
+            {
+                fireRate = 0.1f;  // Faster fire rate for automatic mode
+            }
+            else
+            {
+                fireRate = 0.6f;  // Default fire rate for semi-automatic mode
+            }
         }
 
         if (!isAutomatic && Input.GetButtonDown("Fire1"))
@@ -108,13 +118,6 @@ public class PlayerShooting : MonoBehaviour
         animator.SetTrigger(shootAnimationTrigger);
         animator.SetBool("IsShooting", true);
 
-        // Trigger Muzzle Flash at the gun barrel
-        if (muzzleFlash != null && gunBarrel != null)
-        {
-            muzzleFlash.transform.position = gunBarrel.position;  // Position muzzle flash at the gun barrel
-            muzzleFlash.Play();  // Play the muzzle flash particle system
-        }
-
         if (hud != null)
         {
             hud.SetAmoCount(currentAmmo);
@@ -143,8 +146,10 @@ public class PlayerShooting : MonoBehaviour
         // Create tracer effect using Line Renderer
         CreateTracerEffect(gunPosition, endPoint);
 
-        StartCoroutine(ShowDebugRay(gunPosition, endPoint));
+        // Emit muzzle flash at the gun barrel
+        EmitMuzzleFlash();
 
+        // Emit casing
         EmitCasing();
 
         // Apply recoil effect to crosshair
@@ -195,6 +200,32 @@ public class PlayerShooting : MonoBehaviour
                 Vector2 ejectDirection = new Vector2(Random.Range(-1f, 1f), Random.Range(0.5f, 1f)).normalized;
                 rb.AddForce(ejectDirection * casingEjectionForce, ForceMode2D.Impulse);
             }
+        }
+    }
+
+    private void EmitMuzzleFlash()
+    {
+        if (muzzleFlashPrefab != null && gunBarrel != null)
+        {
+            // Instantiate the muzzle flash sprite at the gun barrel's position and rotation
+            GameObject muzzleFlashObj = Instantiate(muzzleFlashPrefab, gunBarrel.position, gunBarrel.rotation);
+
+            // Ensure the muzzle flash rotates along with the barrel (already handled, but here we refine the positioning)
+            muzzleFlashObj.transform.rotation = gunBarrel.rotation;
+
+            // Slightly offset the muzzle flash to appear ahead of the gun barrel
+            float muzzleFlashOffset = 0.2f; // Adjust this value to better align with your gun
+            muzzleFlashObj.transform.position = gunBarrel.position + (gunBarrel.up * muzzleFlashOffset);
+
+            // Optionally adjust position vertically (up or down) if the gun barrel is not perfectly centered
+            // muzzleFlashObj.transform.position += new Vector3(0, 0.1f, 0); // adjust as needed
+
+            // Destroy the muzzle flash sprite after a short duration (e.g., 0.1 seconds) to prevent it from lingering
+            Destroy(muzzleFlashObj, 0.1f);  // Adjust this duration to control how long the flash lasts
+        }
+        else
+        {
+            Debug.LogError("Muzzle flash prefab or gun barrel is not assigned!");  // Error check
         }
     }
 
