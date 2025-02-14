@@ -36,7 +36,7 @@ public class MainMenu : MonoBehaviour
     private void PlayGame()
     {
         Debug.Log("Start button clicked! Loading SampleScene...");
-        SceneManager.LoadScene("SampleScene");
+        SceneManager.LoadScene("Test");
     }
 
     private void QuitGame()
