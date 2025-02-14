@@ -1,6 +1,6 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/LevelSelect.uss?fileID=7433441132597879392&amp;guid=339b6007ad112694a888028248260752&amp;type=3#LevelSelect" />
-    <ui:VisualElement style="flex-grow: 1; background-image: none;">
-        <ui:VisualElement style="flex-grow: 1; position: absolute; height: 256px; width: 512px; top: 132px; left: 53px;" />
+    <ui:VisualElement name="map_container" style="flex-grow: 1; background-image: none; width: 1206px;">
+        <ui:VisualElement name="map" style="flex-grow: 1; background-image: url(&quot;project://database/Assets/UI%20Toolkit/LevelSelect/levelSelect%20sprite/EuropemapMain_512x256.png?fileID=21300000&amp;guid=cd1b422c996dd1741a812b0947725783&amp;type=3#EuropemapMain_512x256&quot;); width: 1215px; height: 700px; display: flex; opacity: 1; position: absolute; top: -11px; left: -7px;" />
     </ui:VisualElement>
 </ui:UXML>
