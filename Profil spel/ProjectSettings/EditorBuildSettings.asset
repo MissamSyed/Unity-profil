@@ -9,11 +9,11 @@ EditorBuildSettings:
     path: Assets/Scenes/Main menu.unity
     guid: 1125a9b947faf9e4385a289e581e4588
   - enabled: 1
-    path: Assets/Scenes/Main menu - Copy.unity
-    guid: 92bca71ca53df6f4fae68561e51a9720
+    path: Assets/Scenes/Test.unity
+    guid: aa95ffa783f987040b279d271ee1697b
   - enabled: 1
     path: Assets/Scenes/SampleScene.unity
-    guid: 2cda990e2423bbf4892e6590ba056729
+    guid: 4b86bf631f1bcb446b052ff2a8fc6499
   - enabled: 1
     path: Assets/Scenes/SampleScene 1.unity
     guid: 60bebec96aab7ed4e9781c3ad98a08e8
@@ -21,9 +21,9 @@ EditorBuildSettings:
     path: Assets/Scenes/SampleScene 2.unity
     guid: 61e20eabea1bded488a542b5142823af
   - enabled: 1
-    path: Assets/Scenes/Test.unity
-    guid: aa95ffa783f987040b279d271ee1697b
-  - enabled: 1
     path: Assets/Scenes/sigma.unity
     guid: 7fe97c779ec90f6419ee5a9ee5235ea8
+  - enabled: 1
+    path: Assets/Scenes/Main menu - Copy.unity
+    guid: 92bca71ca53df6f4fae68561e51a9720
   m_configObjects: {}
